@@ -1,0 +1,22 @@
+@import "material-symbols.css";
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('./fonts/OpenSans-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./fonts/Roboto-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Zeyada';
+    src: url('./fonts/Zeyada-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}

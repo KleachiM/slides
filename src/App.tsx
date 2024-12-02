@@ -1,23 +1,18 @@
 import React from 'react';
 import './App.css';
+import Miniatures from "./components/Miniatures";
+import Slide from "./components/Slide";
+import Editor from "./components/Editor";
 
 function App() {
   return (
-    // <div className="App">
-    //   <div className="Editor">
-    //     <Editor/>
-    //   </div>
-    //   <div className="Presentation">
-    //     <Miniatures/>
-    //     <Slide/>
-    //   </div>
-    // </div>
-      <div>
-          <div>
-              Editor
+      <div className="app">
+          <div className="editor">
+              <Editor/>
           </div>
-          <div>
-              miniatures and slides
+          <div className="presentation">
+              <Miniatures/>
+              <Slide/>
           </div>
       </div>
   );

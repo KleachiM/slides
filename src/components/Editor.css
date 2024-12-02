@@ -1,0 +1,36 @@
+.editor {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+    font-family: SansSerif, sans-serif;
+    font-size: 3vw;
+    border-style: none;
+    margin: 0 10vw;
+}
+
+.title {
+    padding: 2px 5px;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+
+.title::selection {
+    background: transparent;
+}
+
+.title:hover {
+    border-color: #dadce0;
+}
+
+.tools {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    user-select: none;
+    margin: 0 10em;
+}
+
+.click-button:hover, .active-tool {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

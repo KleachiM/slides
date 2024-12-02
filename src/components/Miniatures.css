@@ -1,0 +1,7 @@
+.miniatures {
+    border-style: solid;
+    width: 25%;
+    min-width: 25vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
