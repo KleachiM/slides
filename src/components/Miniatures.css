@@ -5,3 +5,7 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+.miniature {
+    transform: scale(0.5);
+}
