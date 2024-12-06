@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Miniatures from "./components/Miniatures";
-import Slide from "./components/Slide";
+import ActiveSlide from "./components/ActiveSlide";
 import Editor from "./components/Editor";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
           </div>
           <div className="presentation">
               <Miniatures/>
-              <Slide/>
+              <ActiveSlide/>
           </div>
       </div>
   );

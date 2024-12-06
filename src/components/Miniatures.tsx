@@ -11,13 +11,14 @@ type MiniaturesProps = {
 function Miniatures(props: MiniaturesProps){
     return <div className="miniatures">
         {props.slides.map((slide) => {
-            return <div key={slide.id} className="miniature"
-                style={typeof(slide.background) === 'string'
+            return <div
+                key={slide.id}
+                className="miniature"
+                style={typeof slide.background === 'string'
                     ? {backgroundColor: slide.background}
                     : {backgroundImage: slide.background.source}}>
-                {/*Slide data (if elem.type === 'text' ... else ...)*/}
                 {slide.slideData.map(e =>
-                    <SlideElementsItem slideElement={e}/>
+                    <SlideElementsItem key={e.id} slideElement={e}/>
                 )}
             </div>
         })}

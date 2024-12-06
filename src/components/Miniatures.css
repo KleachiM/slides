@@ -4,8 +4,13 @@
     min-width: 25vw;
     overflow-x: hidden;
     overflow-y: auto;
+    margin: 1px;
 }
 
 .miniature {
-    transform: scale(0.5);
+    transform: scale(1);
+    margin: 10px 5px;
+    border: solid;
+    position: relative;
+    min-height: 20%;
 }

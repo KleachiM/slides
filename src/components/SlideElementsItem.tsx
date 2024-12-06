@@ -7,13 +7,19 @@ type SlideElementProps = {
 export function SlideElementsItem(props: SlideElementProps){
     // create common part of div
     if (props.slideElement.type === 'text')
-        return <div
-            style={{top: props.slideElement.point.x}}>
-            Text element
-        </div>
-
+        return <textarea key={props.slideElement.id}
+            style={{
+                top: props.slideElement.point.x,
+                left: props.slideElement.point.y,
+                width: props.slideElement.dimension.width,
+                height: props.slideElement.dimension.height,
+                transform: 'scale(1)',
+                position: "absolute"
+            }}
+            defaultValue={props.slideElement.content}
+            />
     if (props.slideElement.type === "image")
-        return <image
+        return <image key={props.slideElement.id}
             href={props.slideElement.source}
             x={props.slideElement.point.x}
             y={props.slideElement.point.y}
@@ -21,6 +27,6 @@ export function SlideElementsItem(props: SlideElementProps){
             height={props.slideElement.dimension.height}
         />
 
-    const unknownElement = <></>;
+    const unknownElement = <div></div>;
     return unknownElement
 }
