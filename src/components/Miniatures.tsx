@@ -18,7 +18,7 @@ function Miniatures(props: MiniaturesProps){
                     ? {backgroundColor: slide.background}
                     : {backgroundImage: slide.background.source}}>
                 {slide.slideData.map(e =>
-                    <SlideElementsItem key={e.id} slideElement={e}/>
+                    <SlideElementsItem key={e.id} slideElement={e} scale={0.25}/>
                 )}
             </div>
         })}

@@ -2,18 +2,19 @@ import React from "react";
 import {SlideElement} from "../types/presentationTypes";
 
 type SlideElementProps = {
-    slideElement: SlideElement
+    slideElement: SlideElement,
+    scale: number
 }
 export function SlideElementsItem(props: SlideElementProps){
     // create common part of div
+    const scale = props.scale;
     if (props.slideElement.type === 'text')
         return <textarea key={props.slideElement.id}
             style={{
-                top: props.slideElement.point.x,
-                left: props.slideElement.point.y,
-                width: props.slideElement.dimension.width,
-                height: props.slideElement.dimension.height,
-                transform: 'scale(1)',
+                top: props.slideElement.point.x * scale,
+                left: props.slideElement.point.y * scale,
+                width: props.slideElement.dimension.width * scale,
+                height: props.slideElement.dimension.height * scale,
                 position: "absolute"
             }}
             defaultValue={props.slideElement.content}

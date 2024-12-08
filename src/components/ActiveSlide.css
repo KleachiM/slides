@@ -1,4 +1,12 @@
 .slide {
     width: 100%;
     position: relative;
+    border: solid;
+    height: 100%;
+}
+
+.slide-border {
+    border: solid;
+    padding: 5px;
+    width: 100%;
 }
