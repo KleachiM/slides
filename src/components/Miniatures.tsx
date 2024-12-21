@@ -1,16 +1,12 @@
 import React from "react";
 import './Miniatures.css'
-import {Slide} from "../types/presentationTypes";
-import store from "../store/store";
-import {connect} from "react-redux";
+import {useAppSelector} from "../store/store";
 import {SlideElementsItem} from "./SlideElementsItem";
 
-type MiniaturesProps = {
-    slides: Array<Slide>
-}
-function Miniatures(props: MiniaturesProps){
+export default function Miniatures(){
+    const slides = useAppSelector(state => state.slides);
     return <div className="miniatures">
-        {props.slides.map((slide) => {
+        {slides.map((slide) => {
             return <div
                 key={slide.id}
                 className="miniature"
@@ -24,9 +20,3 @@ function Miniatures(props: MiniaturesProps){
         })}
     </div>
 }
-
-const mapStateToProps = () => ({
-    slides: store.getState().slides
-});
-
-export default connect(mapStateToProps)(Miniatures);

@@ -51,10 +51,15 @@ const initialState: Presentation = {
     selection: {type: 'slide', value: []}
 };
 
-export default function appReducer(state = initialState, action: Action){
+export default function appReducer(presentation = initialState, action: Action){
     switch (action.type){
+        case ActionType.MOVE_ELEMENT:
 
         default:
-            return state;
+            return presentation;
     }
+}
+
+enum ActionType {
+    MOVE_ELEMENT = 'MOVE_ELEMENT'
 }

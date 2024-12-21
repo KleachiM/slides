@@ -1,17 +1,12 @@
 import React from "react";
-import {SelectionType} from "../types/presentationTypes";
 import './Editor.css'
-import store from "../store/store";
-import {connect} from "react-redux";
+import {useAppSelector} from "../store/store";
 
-type EditorProps = {
-    title: string,
-    selection?: SelectionType
-}
-function Editor(props: EditorProps){
+export default function Editor(){
+    const title = useAppSelector(state => state.title);
     return <div>
         <div className="title">
-            {props.title}
+            {title}
         </div>
         <div className="tools">
             <span className="material-symbols-outlined click-button" title="Add slide">add</span>
@@ -36,9 +31,3 @@ function Editor(props: EditorProps){
         </div>
     </div>
 }
-
-const mapStateToProps = () => ({
-    title: store.getState().title
-});
-
-export default connect(mapStateToProps)(Editor);
