@@ -1,4 +1,14 @@
-import { Presentation, Slide, Block, TextBlock, ImageBlock, Point, Dimension, Image } from '../types/presentationTypes';
+import {
+    Presentation,
+    Slide,
+    Block,
+    TextBlock,
+    ImageBlock,
+    Point,
+    Dimension,
+    Image,
+    SelectionType
+} from '../types/presentationTypes';
 
 function getRandomString(): string {
     return `${new Date().getTime()}${Math.random()}`;
@@ -237,5 +247,12 @@ export function changeSlideBackground(presentation: Presentation, newBckgr: stri
     return {
         ...presentation,
         slides: newSlides
+    }
+}
+
+export function setSelection(presentation: Presentation, newSelection: SelectionType){
+    return {
+        ...presentation,
+        selection: newSelection
     }
 }

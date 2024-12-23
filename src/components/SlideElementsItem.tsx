@@ -1,4 +1,4 @@
-import React, {RefObject, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {SlideElement} from "../types/presentationTypes";
 import {useDragAndDropElement} from "../customHooks/dragAndDrop";
 
@@ -10,19 +10,34 @@ type SlideElementProps = {
 export function SlideElementsItem(props: SlideElementProps){
     // create common part of div
     const ref = useRef<HTMLTextAreaElement & SVGImageElement>(null);
-    const [pos, setPos] = useState(props.slideElement.point);
-    useDragAndDropElement({ref, setPos});
+    const [deltaPoint, setPointDelta] = useState({x: 0, y: 0});
+    const [deltaDim, setDimensionDelta] = useState({width: 0, height: 0});
+    const elemId = props.slideElement.id;
+    useDragAndDropElement({ref, setDelta: setPointDelta, elemId});
+
+    const point = {
+        x: props.slideElement.point.x + deltaPoint.x,
+        y: props.slideElement.point.y + deltaPoint.y
+    }
+
+    const dimension = {
+        width: props.slideElement.dimension.width + deltaDim.width,
+        height: props.slideElement.dimension.height + deltaDim.height
+    }
+
+    console.log(`Props x: ${props.slideElement.point.x}. Delta: ${deltaPoint.x}. Point: ${point.x}`)
+    console.log(`Props y: ${props.slideElement.point.y}. Delta: ${deltaPoint.y}. Point: ${point.y}`)
     const scale = props.scale;
     if (props.slideElement.type === 'text')
         return <textarea
             key={props.slideElement.id}
             ref={ref}
             style={{
-                top: props.slideElement.point.x * scale,
-                left: props.slideElement.point.y * scale,
-                width: props.slideElement.dimension.width * scale,
-                height: props.slideElement.dimension.height * scale,
-                position: "absolute",
+                top: point.y * scale,
+                left: point.x * scale,
+                width: dimension.width * scale,
+                height: dimension.height * scale,
+                position: "absolute"
             }}
             defaultValue={props.slideElement.content}
             />
@@ -31,10 +46,10 @@ export function SlideElementsItem(props: SlideElementProps){
             key={props.slideElement.id}
             ref={ref}
             href={props.slideElement.source}
-            x={props.slideElement.point.x}
-            y={props.slideElement.point.y}
-            width={props.slideElement.dimension.width}
-            height={props.slideElement.dimension.height}
+            x={point.x * scale}
+            y={point.y * scale}
+            width={dimension.width * scale}
+            height={dimension.height * scale}
         />
 
     const unknownElement = <div></div>;

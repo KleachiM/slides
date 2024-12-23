@@ -1,9 +1,10 @@
 import {Block, Presentation} from "../types/presentationTypes";
-import {Action} from "redux";
+import {moveElementByOffset, setSelection} from "../actions/actions";
+import {ActionType} from "../types/actionTypes";
 
 export const defaultBlock: Block = {
     id: 'id',
-    point: {x: 100, y: 10},
+    point: {x: 50, y: 100},
     dimension: {width: 50, height: 50}
 }
 
@@ -47,19 +48,17 @@ const initialState: Presentation = {
             ]
         }
     ],
-    activeSlideId: '',
+    activeSlideId: '1',
     selection: {type: 'slide', value: []}
 };
 
-export default function appReducer(presentation = initialState, action: Action){
+export default function appReducer(presentation = initialState, action){
     switch (action.type){
         case ActionType.MOVE_ELEMENT:
-
+            return moveElementByOffset(presentation, action.payload);
+        case ActionType.SET_SELECTION:
+            return setSelection(presentation, action.payload);
         default:
             return presentation;
     }
-}
-
-enum ActionType {
-    MOVE_ELEMENT = 'MOVE_ELEMENT'
 }
