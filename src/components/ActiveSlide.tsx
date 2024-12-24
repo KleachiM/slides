@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React from "react";
 import {useAppSelector} from "../store/store";
 import {SlideElementsItem} from "./SlideElementsItem";
 import './ActiveSlide.css'
