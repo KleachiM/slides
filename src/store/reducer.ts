@@ -1,5 +1,5 @@
 import {Block, Presentation} from "../types/presentationTypes";
-import {moveElementByOffset, setSelection} from "../actions/actions";
+import {moveElementByOffset, resizeElement, setSelection} from "../actions/actions";
 import {ActionType} from "../types/actionTypes";
 
 export const defaultBlock: Block = {
@@ -26,7 +26,19 @@ const initialState: Presentation = {
                     fontSize: 10,
                     fontColor: 'black',
                     fontFamily: 'serif'
-                }
+                },
+                {
+                    type: 'text',
+                    id: `tstId3`,
+                    point: {x: 440, y: 40},
+                    dimension: {
+                        width: 100,
+                        height: 100},
+                    content: 'Content in slide 1',
+                    fontSize: 10,
+                    fontColor: 'black',
+                    fontFamily: 'serif'
+                },
             ]
         },
         {
@@ -54,8 +66,10 @@ const initialState: Presentation = {
 
 export default function appReducer(presentation = initialState, action){
     switch (action.type){
-        case ActionType.MOVE_ELEMENT:
+        case ActionType.MOVE_ELEMENTS:
             return moveElementByOffset(presentation, action.payload);
+        case ActionType.RESIZE_ELEMENTS:
+            return resizeElement(presentation, action.payload.positionOffset, action.payload.dimensionOffset);
         case ActionType.SET_SELECTION:
             return setSelection(presentation, action.payload);
         default:

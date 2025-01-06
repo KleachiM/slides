@@ -180,8 +180,8 @@ export function moveElementByOffset(presentation: Presentation, offset: Point): 
 }
 
 export function resizeElement(presentation: Presentation, offsetPoint: Point, offsetDimension: Dimension): Presentation{
+    //todo: анализировать наложение элементов друг на друга
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
-
     const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
         if (!presentation.selection.value.includes(element.id)) {
             return element;

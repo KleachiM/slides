@@ -4,14 +4,15 @@ import {useAppActions, useAppSelector} from "../store/store";
 
 type DndProps = {
     ref: RefObject<HTMLTextAreaElement | SVGImageElement | null>,
-    setDelta: Dispatch<SetStateAction<Point>>,
+    setDelta: Dispatch<SetStateAction<Point>> | undefined,
     elemId: string
 }
 
-export function useDragAndDropElement(props: DndProps){
+export function useDragAndDropElements(props: DndProps){
     let startPos = {x: 0, y: 0};
     let delta = {x: 0, y: 0};
 
+    //todo: перенести useAppSelector в одно место
     const currentSelectionValue = useAppSelector(state => state.selection.value);
     const {setSelection, moveElement} = useAppActions();
     useEffect(() => {
@@ -20,39 +21,41 @@ export function useDragAndDropElement(props: DndProps){
     });
 
     const mouseDownHandler = (event) => {
-        startPos = {
-            x: event.pageX,
-            y: event.pageY
-        };
-        // add elem to selection
-        const newSelection: SelectionType = event.shiftKey
-            ? {type: 'element', value: [...currentSelectionValue, props.elemId]}
-            : {type: 'element', value: [props.elemId]}
+        startPos = {x: event.pageX, y: event.pageY};
+        if (!currentSelectionValue.includes(props.elemId)){
+            let newSelection: SelectionType;
+            if (event.shiftKey){
+                if (!currentSelectionValue.includes(props.elemId))
+                    newSelection = {type: 'element', value: [...currentSelectionValue, props.elemId]}
+                else
+                    newSelection = {type: 'element', value: [...currentSelectionValue]}
+            }
+            else
+                newSelection = {type: 'element', value: [props.elemId]}
 
-        setSelection(newSelection);
+            setSelection(newSelection);
+        }
 
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
         event.preventDefault();
+        event.stopPropagation();
     };
 
     const mouseMoveHandler = (event) => {
-        // delta = {
-        //     x: event.pageX - startPos.x,
-        //     y: event.pageY - startPos.y,
-        // }
-
-        if (isValidMousePosition(event.pageX)){
-            delta.x = event.pageX - startPos.x
+        //todo: валидация позиции курсора, чтобы элементы не выезжал за пределы слайда
+        delta = {
+            x: event.pageX - startPos.x,
+            y: event.pageY - startPos.y,
         }
 
-        props.setDelta(delta);
+        if (props.setDelta)
+            props.setDelta(delta);
     };
 
     const mouseUpHandler = () => {
-        console.log(`End drop. Delta: x: ${delta.x}. y: ${delta.y}`);
-
-        if (delta.x || delta.y){
+        console.log('removing')
+        if ((delta.x || delta.y) && props.setDelta){
             moveElement(delta);
             props.setDelta({x: 0,y: 0});
         }
@@ -62,6 +65,5 @@ export function useDragAndDropElement(props: DndProps){
 }
 
 function isValidMousePosition(event: MouseEvent){
-    
     return true;
 }
