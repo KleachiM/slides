@@ -54,7 +54,6 @@ export function useDragAndDropElements(props: DndProps){
     };
 
     const mouseUpHandler = () => {
-        console.log('removing')
         if ((delta.x || delta.y) && props.setDelta){
             moveElement(delta);
             props.setDelta({x: 0,y: 0});

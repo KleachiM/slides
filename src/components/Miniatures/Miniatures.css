@@ -10,7 +10,16 @@
 .miniature {
     transform: scale(1);
     margin: 10px 5px;
-    border: solid;
+    border: groove;
     position: relative;
     min-height: 20%;
+}
+
+.miniature:hover {
+    opacity: 95%;
+}
+
+.active_slide {
+    border-style: solid double;
+    border-color: black;
 }

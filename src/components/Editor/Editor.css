@@ -10,9 +10,18 @@
 }
 
 .title {
+    min-width: 30%;
+    font: 18px/30px sans-serif;
     padding: 2px 5px;
     border: 1px solid white;
     border-radius: 4px;
+}
+
+.buttons-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    user-select: none;
 }
 
 .title::selection {
@@ -28,9 +37,21 @@
     flex-direction: row;
     align-items: center;
     user-select: none;
-    margin: 0 10em;
 }
 
 .click-button:hover, .active-tool {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+
+/* Убираем стрелки для Chrome, Edge и Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Убираем стрелки для Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

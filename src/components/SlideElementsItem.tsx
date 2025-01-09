@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useRef, useState} from "react";
 import {Dimension, Point, SlideElement} from "../types/presentationTypes";
-import {useDragAndDropElements} from "../customHooks/DragAndDrop";
+import {useDragAndDropElements} from "../customHooks/DNDElements";
 
 type SlideElementProps = {
     slideElement: SlideElement,
@@ -12,35 +12,47 @@ type SlideElementProps = {
 }
 
 export function SlideElementsItem(props: SlideElementProps){
-    const ref = useRef<HTMLTextAreaElement & SVGImageElement>(null);
+    const ref = useRef<HTMLTextAreaElement & HTMLImageElement>(null);
     const elemId = props.slideElement.id;
     useDragAndDropElements({ref, setDelta: props.setDelta, elemId});
 
-    // const deltaDim = {width: 0, height: 0};
-    // const deltaPoint = props.deltaPoint === undefined ? {x: 0, y: 0} : {x: props.deltaPoint.x, y: props.deltaPoint.y};
     const scale = props.scale;
+    const isReadOnly = props.scale < 1;
     if (props.slideElement.type === 'text')
         return <textarea
             key={props.slideElement.id}
             ref={ref}
+            readOnly={isReadOnly}
+            onDoubleClick={(event) => {
+                if (!isReadOnly) {
+                    event.preventDefault();
+                    ref.current?.focus();
+                }
+            }}
+            onBlur={(event) => {
+                if (!isReadOnly) {
+                    // store.dispatch(presentationActions.setText(event.target.value));
+                }
+            }}
             style={{
-                top: props.slideElement.point.y * scale, //(props.slideElement.point.y + deltaPoint.y) * scale,
-                left: props.slideElement.point.x * scale, //(props.slideElement.point.x + deltaPoint.x) * scale,
-                width: props.slideElement.dimension.width * scale, //(props.slideElement.dimension.width + deltaDim.width) * scale,
-                height: props.slideElement.dimension.height * scale, //(props.slideElement.dimension.height + deltaDim.height) * scale,
-                position: "absolute"
+                top: props.slideElement.point.y * scale,
+                left: props.slideElement.point.x * scale,
+                width: props.slideElement.dimension.width * scale,
+                height: props.slideElement.dimension.height * scale,
+                position: "absolute",
+                fontFamily: props.slideElement.fontFamily,
+                fontSize: props.slideElement.fontSize,
             }}
             defaultValue={props.slideElement.content}
             />
     if (props.slideElement.type === "image")
-        return <image
+        return <img
             key={props.slideElement.id}
             ref={ref}
-            href={props.slideElement.source}
-            x={props.slideElement.point.x * scale}
-            y={props.slideElement.point.y * scale}
+            src={props.slideElement.source}
             width={props.slideElement.dimension.width * scale}
             height={props.slideElement.dimension.height * scale}
+            style={{position: 'absolute', left: props.slideElement.point.x * scale, top: props.slideElement.point.y * scale}}
         />
 
     const unknownElement = <div></div>;

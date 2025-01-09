@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useRef} from "react";
 import "./Selection.css"
-import {ResizeRef, ResizerPosition, useResizeElements} from "../customHooks/Resize";
-import {Dimension, Point} from "../types/presentationTypes";
+import {ResizeRef, ResizerPosition, useResizeElements} from "../../customHooks/Resize";
+import {Dimension, Point} from "../../types/presentationTypes";
 
 //todo: брать размеры из store.selection
 type SelectionProps = {

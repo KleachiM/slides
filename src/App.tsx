@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import Miniatures from "./components/Miniatures";
-import ActiveSlide from "./components/ActiveSlide";
-import Editor from "./components/Editor";
+import Miniatures from "./components/Miniatures/Miniatures";
+import ActiveSlide from "./components/ActiveSlide/ActiveSlide";
+import Editor from "./components/Editor/Editor";
 function App() {
   return (
       <div className="app">

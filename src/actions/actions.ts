@@ -34,21 +34,58 @@ const defaultTextBlock: TextBlock = {
     fontFamily: 'serif'
 }
 
-const defaultImageBlock: ImageBlock = {
-    type: 'image',
-    id: defaultBlock.id,
-    point: {x: defaultBlock.point.x, y: defaultBlock.point.y},
-    dimension: {
-        width: defaultBlock.dimension.width,
-        height: defaultBlock.dimension.height
-    },
-    source: ''
+function getDefaultTextBlock(): TextBlock{
+    return {
+        type: 'text',
+        id: getRandomString(),
+        point: {x: defaultBlock.point.x, y: defaultBlock.point.y},
+        dimension: {
+            width: defaultBlock.dimension.width,
+            height: defaultBlock.dimension.height
+        },
+        content: '',
+        fontSize: 10,
+        fontColor: 'black',
+        fontFamily: 'serif'
+    }
 }
 
-const defaultSlide: Slide = {
-    id: getRandomString(),
-    background: 'white',
-    slideData: []
+// const defaultImageBlock: ImageBlock = {
+//     type: 'image',
+//     id: defaultBlock.id,
+//     point: {x: defaultBlock.point.x, y: defaultBlock.point.y},
+//     dimension: {
+//         width: defaultBlock.dimension.width,
+//         height: defaultBlock.dimension.height
+//     },
+//     source: ''
+// }
+
+function getDefaultImageBlock(src: string): ImageBlock{
+    return {
+        type: 'image',
+        id: getRandomString(),
+        point: {x: defaultBlock.point.x, y: defaultBlock.point.y},
+        dimension: {
+            width: defaultBlock.dimension.width,
+            height: defaultBlock.dimension.height
+        },
+        source: src
+    }
+}
+
+// const defaultSlide: Slide = {
+//     id: getRandomString(),
+//     background: 'white',
+//     slideData: []
+// }
+
+function getDefaultSlide(): Slide {
+    return {
+        id: getRandomString(),
+        background: 'white',
+        slideData: [],
+    }
 }
 
 export function setTitle(pres: Presentation, newTitle: string): Presentation{
@@ -60,12 +97,20 @@ export function setTitle(pres: Presentation, newTitle: string): Presentation{
     }
 }
 
+export function setActiveSlide(pres: Presentation, activeSlideId: string): Presentation{
+    return {
+        ...pres,
+        activeSlideId: activeSlideId,
+        selection: {type: 'slide', value: [activeSlideId]}
+    }
+}
+
 export function addSlide(presentation: Presentation): Presentation{
     const newSlides = [...presentation.slides];
 
     const index = newSlides.findIndex(slide => slide.id === presentation.activeSlideId)
 
-    newSlides.splice(index + 1, 0, defaultSlide);
+    newSlides.splice(index + 1, 0, getDefaultSlide());
 
     return {
         ...presentation,
@@ -103,17 +148,61 @@ export function changeSlidePosition(presentation: Presentation, newPos: number):
     return pres;
 }
 
-export function addElement(presentation: Presentation, elemType: string): Presentation{
+// export function addElement(presentation: Presentation, elemType: string): Presentation{
+//     const activeSlideIndex = presentation.slides.findIndex(s =>
+//         s.id === presentation.activeSlideId);
+//
+//     const slideData = [...presentation.slides[activeSlideIndex].slideData];
+//     if (elemType === 'text')
+//         slideData.push(defaultTextBlock);
+//     else if (elemType === 'image')
+//         slideData.push(defaultImageBlock);
+//     else
+//         throw new Error('Unknown element type');
+//
+//     const newSlide = {
+//         ...presentation.slides[activeSlideIndex],
+//         slideData: slideData
+//     }
+//
+//     const slides = [...presentation.slides];
+//     slides[activeSlideIndex] = newSlide;
+//
+//     return {
+//         ...presentation,
+//         slides: slides
+//     }
+// }
+
+export function addTextBlock(presentation: Presentation): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s =>
         s.id === presentation.activeSlideId);
 
     const slideData = [...presentation.slides[activeSlideIndex].slideData];
-    if (elemType === 'text')
-        slideData.push(defaultTextBlock);
-    else if (elemType === 'image')
-        slideData.push(defaultImageBlock);
-    else
-        throw new Error('Unknown element type');
+
+    slideData.push(getDefaultTextBlock());
+
+    const newSlide = {
+        ...presentation.slides[activeSlideIndex],
+        slideData: slideData
+    }
+
+    const slides = [...presentation.slides];
+    slides[activeSlideIndex] = newSlide;
+
+    return {
+        ...presentation,
+        slides: slides
+    }
+}
+
+export function addImageBlock(presentation: Presentation, src: string): Presentation{
+    const activeSlideIndex = presentation.slides.findIndex(s =>
+        s.id === presentation.activeSlideId);
+
+    const slideData = [...presentation.slides[activeSlideIndex].slideData];
+
+    slideData.push(getDefaultImageBlock(src));
 
     const newSlide = {
         ...presentation.slides[activeSlideIndex],
@@ -215,11 +304,42 @@ export function resizeElement(presentation: Presentation, offsetPoint: Point, of
 export function changeTextBlockProperty(presentation: Presentation, propName: string, propValue: string|number): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
 
+    if (typeof propValue === "number" && propValue === 0)
+        propValue = 1;
+
     const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
         if (presentation.selection.value.includes(element.id)){
             if (element.type !== 'text' || !(propName in element))
                 return element;
             element[propName] = propValue;
+        }
+        return element;
+    });
+
+    const newSlides = [...presentation.slides];
+    newSlides[activeSlideIndex] = {
+        ...newSlides[activeSlideIndex],
+        slideData: newActiveSlideData,
+    };
+
+    return {
+        ...presentation,
+        slides: newSlides
+    }
+}
+
+export function fontSizeIncOrDec(presentation: Presentation, needToInc: boolean): Presentation{
+    const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
+
+    const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
+        if (presentation.selection.value.includes(element.id)){
+            if (element.type !== 'text')
+                return element;
+
+            if (needToInc)
+                element.fontSize++;
+            else
+                element.fontSize--;
         }
         return element;
     });

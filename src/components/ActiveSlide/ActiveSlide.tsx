@@ -1,10 +1,10 @@
 import React, {useRef, useState} from "react";
-import {useAppSelector} from "../store/store";
-import {SlideElementsItem} from "./SlideElementsItem";
-import SelectionElement from "./SelectionElement";
+import {useAppSelector} from "../../store/store";
+import {SlideElementsItem} from "../SlideElementsItem";
+import SelectionElement from "../Selection/SelectionElement";
 import './ActiveSlide.css'
-import {useActiveSlideEvents} from "../customHooks/ActiveSlideEvents";
-import {SlideElement} from "../types/presentationTypes";
+import {useActiveSlideEvents} from "../../customHooks/ActiveSlideEvents";
+import {SlideElement} from "../../types/presentationTypes";
 
 //todo: в контектсте использовать границы слайда
 export default function ActiveSlide(){
