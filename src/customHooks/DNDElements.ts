@@ -13,7 +13,7 @@ export function useDragAndDropElements(props: DndProps){
     let delta = {x: 0, y: 0};
 
     //todo: перенести useAppSelector в одно место
-    const currentSelectionValue = useAppSelector(state => state.selection.value);
+    const currentSelectionValue = useAppSelector(state => state.presentation.selection.value);
     const {setSelection, moveElement} = useAppActions();
     useEffect(() => {
           props.ref.current?.addEventListener('mousedown', mouseDownHandler);

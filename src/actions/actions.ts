@@ -140,39 +140,17 @@ export function changeSlidePosition(presentation: Presentation, newPos: number):
     if (newPos === activeSlideIndex)
         return presentation;
 
-    const pres = {...presentation};
-    const slideToChange = pres.slides[activeSlideIndex];
+    const slides = [...presentation.slides];
+    const slideToChange = slides[activeSlideIndex];
 
-    pres.slides.splice(activeSlideIndex, 1);
-    pres.slides.splice(newPos, 0, slideToChange);
-    return pres;
+    slides.splice(activeSlideIndex, 1);
+    slides.splice(newPos, 0, slideToChange);
+
+    return {
+        ...presentation,
+        slides: slides
+    }
 }
-
-// export function addElement(presentation: Presentation, elemType: string): Presentation{
-//     const activeSlideIndex = presentation.slides.findIndex(s =>
-//         s.id === presentation.activeSlideId);
-//
-//     const slideData = [...presentation.slides[activeSlideIndex].slideData];
-//     if (elemType === 'text')
-//         slideData.push(defaultTextBlock);
-//     else if (elemType === 'image')
-//         slideData.push(defaultImageBlock);
-//     else
-//         throw new Error('Unknown element type');
-//
-//     const newSlide = {
-//         ...presentation.slides[activeSlideIndex],
-//         slideData: slideData
-//     }
-//
-//     const slides = [...presentation.slides];
-//     slides[activeSlideIndex] = newSlide;
-//
-//     return {
-//         ...presentation,
-//         slides: slides
-//     }
-// }
 
 export function addTextBlock(presentation: Presentation): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s =>
@@ -180,11 +158,12 @@ export function addTextBlock(presentation: Presentation): Presentation{
 
     const slideData = [...presentation.slides[activeSlideIndex].slideData];
 
-    slideData.push(getDefaultTextBlock());
+    const defaultTextBlock = getDefaultTextBlock();
+    slideData.push(defaultTextBlock);
 
     const newSlide = {
         ...presentation.slides[activeSlideIndex],
-        slideData: slideData
+        slideData: slideData,
     }
 
     const slides = [...presentation.slides];
@@ -192,7 +171,8 @@ export function addTextBlock(presentation: Presentation): Presentation{
 
     return {
         ...presentation,
-        slides: slides
+        slides: slides,
+        selection: {type: 'element', value: [defaultTextBlock.id]}
     }
 }
 
@@ -202,11 +182,12 @@ export function addImageBlock(presentation: Presentation, src: string): Presenta
 
     const slideData = [...presentation.slides[activeSlideIndex].slideData];
 
-    slideData.push(getDefaultImageBlock(src));
+    const defaultImageBlock = getDefaultImageBlock(src);
+    slideData.push(defaultImageBlock);
 
     const newSlide = {
         ...presentation.slides[activeSlideIndex],
-        slideData: slideData
+        slideData: slideData,
     }
 
     const slides = [...presentation.slides];
@@ -214,7 +195,8 @@ export function addImageBlock(presentation: Presentation, src: string): Presenta
 
     return {
         ...presentation,
-        slides: slides
+        slides: slides,
+        selection: {type: 'element', value: [defaultImageBlock.id]}
     }
 }
 
@@ -356,6 +338,30 @@ export function fontSizeIncOrDec(presentation: Presentation, needToInc: boolean)
     }
 }
 
+export function changeItalic(presentation: Presentation): Presentation{
+    const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
+
+    const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
+        if (presentation.selection.value.includes(element.id)){
+            if (element.type !== 'text')
+                return element;
+
+            // element.
+        }
+        return element;
+    });
+
+    const newSlides = [...presentation.slides];
+    newSlides[activeSlideIndex] = {
+        ...newSlides[activeSlideIndex],
+        slideData: newActiveSlideData,
+    };
+
+    return {
+        ...presentation,
+        slides: newSlides
+    }
+}
 export function changeSlideBackground(presentation: Presentation, newBckgr: string|Image): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
 

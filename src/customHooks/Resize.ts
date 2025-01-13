@@ -4,6 +4,15 @@ import {Dimension, Point} from "../types/presentationTypes";
 import {useAppActions} from "../store/store";
 
 export enum ResizerPosition {
+    // TOP_LEFT = 'topLeft',
+    // TOP_RIGHT = 'topRight',
+    // BOTTOM_LEFT = 'bottomLeft',
+    // BOTTOM_RIGHT = 'bottomRight',
+    // TOP = 'top',
+    // BOTTOM = 'bottom',
+    // LEFT = 'left',
+    // RIGHT = 'right',
+
     TOP_LEFT = 'top-left',
     TOP_RIGHT = 'top-right',
     BOTTOM_LEFT = 'bottom-left',

@@ -74,3 +74,40 @@ export const setBackgroundImage = (src) => (
         payload: src
     }
 )
+
+export const changeItalic = () => (
+    {
+        type: ActionType.CHANGE_ITALIC
+    }
+)
+
+export const changeUnderline = () => (
+    {
+        type: ActionType.CHANGE_UNDERLINE
+    }
+)
+
+export const changeBold = () => (
+    {
+        type: ActionType.CHANGE_BOLD
+    }
+)
+
+export const changeSlidePosition = (index) => (
+    {
+        type: ActionType.CHANGE_SLIDE_POSITION,
+        payload: index
+    }
+)
+
+export const undo = () => (
+    {
+        type: ActionType.UNDO
+    }
+)
+
+export const redo = () => (
+    {
+        type: ActionType.REOO
+    }
+)

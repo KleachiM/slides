@@ -8,7 +8,7 @@ export const defaultBlock: Block = {
     dimension: {width: 50, height: 50}
 }
 
-const initialState: Presentation = {
+const initialPresentation: Presentation = {
     title: 'New presentation',
     slides: [
         {
@@ -82,27 +82,174 @@ const initialState: Presentation = {
     selection: {type: 'slide', value: []}
 };
 
-export default function appReducer(presentation = initialState, action){
+type StateType = {
+    presentation: Presentation,
+    undoStack: Array<Presentation>,
+    redoStack: Array<Presentation>
+}
+
+const initialState: StateType = {
+    presentation: initialPresentation,
+    undoStack: [],
+    redoStack: []
+}
+
+export default function appReducer(state = initialState, action){
+    const {presentation, undoStack, redoStack} = state;
+    console.log(`calling with action: ${action.type}`)
     switch (action.type){
         case ActionType.MOVE_ELEMENTS:
-            return actions.moveElementByOffset(presentation, action.payload);
+            return {
+                presentation: actions.moveElementByOffset(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.RESIZE_ELEMENTS:
-            return actions.resizeElement(presentation, action.payload.positionOffset, action.payload.dimensionOffset);
+            return {
+                presentation: actions.resizeElement(presentation, action.payload.positionOffset, action.payload.dimensionOffset),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.SET_SELECTION:
-            return actions.setSelection(presentation, action.payload);
+            return {
+                presentation: actions.setSelection(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.SET_ACTIVE_SLIDE:
-            return actions.setActiveSlide(presentation, action.payload);
+            return {
+                presentation: actions.setActiveSlide(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.ADD_SLIDE:
-            return actions.addSlide(presentation);
+            return {
+                presentation: actions.addSlide(state.presentation),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.DELETE_SLIDE:
-            return actions.deleteSlides(presentation);
+            return {
+                presentation: actions.deleteSlides(state.presentation),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.ADD_IMAGE:
-            return actions.addImageBlock(presentation, action.payload);
+            return {
+                presentation: actions.addImageBlock(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.SET_TEXT_PROPERTY:
-            return actions.changeTextBlockProperty(presentation, action.payload.propName, action.payload.propValue);
+            return {
+                presentation: actions.changeTextBlockProperty(presentation, action.payload.propName, action.payload.propValue),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.FONT_SIZE_INC_DEC:
-            return actions.fontSizeIncOrDec(presentation, action.payload);
+            return {
+                presentation: actions.fontSizeIncOrDec(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
+        case ActionType.CHANGE_SLIDE_POSITION:
+            return {
+                presentation: actions.changeSlidePosition(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
+        case ActionType.UNDO:
+            if (undoStack.length === 0){
+                console.log("undo length 0")
+                return state;
+            }
+
+            console.log(`undoing. undo length: ${undoStack.length}`)
+            const prevPres = undoStack[undoStack.length - 1];
+            const newUndoStack = redoStack.slice(0, redoStack.length - 1);
+
+            return {
+                presentation: prevPres,
+                undoStack: newUndoStack,
+                redoStack: [presentation, ...redoStack]
+            }
+        case ActionType.REOO:
+            if (redoStack.length === 0)
+                return state;
+
+            const newPres = redoStack[0];
+            const newRedoStack = redoStack.slice(1);
+
+            return {
+                presentation: newPres,
+                undoStack: [...undoStack, presentation],
+                redoStack: newRedoStack
+            }
         default:
-            return presentation;
+            return state;
     }
 }
+
+// export default function appReducer(state = initialState, action){
+//     let newPresentation;
+//     const {presentation, undoStack, redoStack} = state;
+//     switch (action.type){
+//         case ActionType.MOVE_ELEMENTS:
+//             newPresentation = actions.moveElementByOffset(presentation, action.payload);
+//             break;
+//         case ActionType.RESIZE_ELEMENTS:
+//             newPresentation = actions.resizeElement(presentation, action.payload.positionOffset, action.payload.dimensionOffset);
+//             break;
+//         case ActionType.SET_SELECTION:
+//             newPresentation = actions.setSelection(presentation, action.payload);
+//             break;
+//         case ActionType.SET_ACTIVE_SLIDE:
+//             newPresentation = actions.setActiveSlide(presentation, action.payload);
+//             break;
+//         case ActionType.ADD_SLIDE:
+//             newPresentation = actions.addSlide(state.presentation);
+//             break;
+//         case ActionType.DELETE_SLIDE:
+//             newPresentation = actions.deleteSlides(state.presentation);
+//             break;
+//         case ActionType.ADD_IMAGE:
+//             newPresentation = actions.addImageBlock(presentation, action.payload);
+//             break;
+//         case ActionType.SET_TEXT_PROPERTY:
+//             newPresentation = actions.changeTextBlockProperty(presentation, action.payload.propName, action.payload.propValue);
+//             break;
+//         case ActionType.FONT_SIZE_INC_DEC:
+//             newPresentation = actions.fontSizeIncOrDec(presentation, action.payload);
+//             break;
+//         case ActionType.CHANGE_SLIDE_POSITION:
+//             newPresentation = actions.changeSlidePosition(presentation, action.payload);
+//             break;
+//         case ActionType.UNDO:
+//             if (undoStack.length === 0)
+//                 return state;
+//
+//             const prevPres = redoStack[redoStack.length - 1];
+//             const newUndoStack = redoStack.slice(0, redoStack.length - 1);
+//
+//             return {
+//                 presentation: prevPres,
+//                 undoStack: newUndoStack,
+//                 redoStack: [presentation, ...redoStack]
+//             }
+//         case ActionType.REOO:
+//             if (redoStack.length === 0)
+//                 return state;
+//
+//             const newPres = redoStack[0];
+//             const newRedoStack = redoStack.slice(1);
+//
+//             return {
+//                 presentation: newPres,
+//                 undoStack: [...undoStack, newPres],
+//                 redoStack: newRedoStack
+//             }
+//         default:
+//             console.log('return default')
+//             return state;
+//     }
+// }

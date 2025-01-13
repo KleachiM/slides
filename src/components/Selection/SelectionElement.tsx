@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useRef} from "react";
-import "./Selection.css"
+import styles from "./Selection.module.css"
 import {ResizeRef, ResizerPosition, useResizeElements} from "../../customHooks/Resize";
 import {Dimension, Point} from "../../types/presentationTypes";
 
@@ -12,6 +12,7 @@ type SelectionProps = {
     setDelta: Dispatch<SetStateAction<Point>>,
     setDim: Dispatch<SetStateAction<Dimension>>,
 }
+//{`resizeHandle ${direction.position}`}
 export default function SelectionElement(props: SelectionProps){
     const borderThickness = 10;
 
@@ -30,13 +31,13 @@ export default function SelectionElement(props: SelectionProps){
     const divArr = resizers.map((direction, index) => (
         <div
             key={direction.position}
-            className={`resize-handle ${direction.position}`}
+            className={`${styles.resizeHandle} ${styles[direction.position]}`}
             ref={resizers[index].ref}
         ></div>
     ));
 
     useResizeElements({resizers, setPointDelta: props.setDelta, setDimDelta: props.setDim})
-    return <div className="resizable"
+    return <div className={styles.resizable}
         style={{
             top: props.top - borderThickness,
             left: props.left - borderThickness,

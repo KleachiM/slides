@@ -21,8 +21,11 @@ export function DelayedInput(props: DelayedInputProps) {
             if (value === "") {
                 setValue(prevValue);
             } else {
-                changeTextProperty("fontSize", Number(value))
-                setPrevValue(value);
+                if (prevValue !== value){ // условие добавлено для блокирования изменения текста при dnd текстового элемента
+                    console.log("calling ctp in delayed input")
+                    changeTextProperty("fontSize", Number(value))
+                    setPrevValue(value);
+                }
             }
         }, delay);
 

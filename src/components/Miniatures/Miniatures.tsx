@@ -1,12 +1,12 @@
 import React from "react";
-import './Miniatures.css'
+import styles from './Miniatures.module.css'
 import {useAppSelector} from "../../store/store";
 import Miniature from "./Miniature";
 
 export default function Miniatures(){
-    const slides = useAppSelector(state => state.slides);
-    const activeSlideId = useAppSelector(state => state.activeSlideId);
-    return <div className="miniatures">
+    const slides = useAppSelector(state => state.presentation.slides);
+    const activeSlideId = useAppSelector(state => state.presentation.activeSlideId);
+    return <div className={styles.miniatures}>
         {slides.map((slide) =>
             <Miniature key={slide.id} slide={slide} activeSlideId={activeSlideId}/>
         )}
