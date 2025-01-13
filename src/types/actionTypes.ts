@@ -15,4 +15,7 @@ export enum ActionType {
     CHANGE_SLIDE_POSITION = 'CHANGE_SLIDE_POSITION',
     UNDO = 'UNDO',
     REOO = 'REOO',
+    TO_JSON = 'TO_JSON',
+    FROM_JSON = 'FROM_JSON',
+    TO_PDF = 'TO_PDF',
 }

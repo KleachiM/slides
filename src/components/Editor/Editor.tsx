@@ -1,10 +1,11 @@
 import React from "react";
 import styles from './Editor.module.css'
 import {useAppActions, useAppSelector} from "../../store/store";
-import {TextBlock} from "../../types/presentationTypes";
+import {Presentation, TextBlock} from "../../types/presentationTypes";
 import {DelayedInput} from "../DelayedInput/DelayedInput";
 
 export default function Editor(){
+    const presentation = useAppSelector(state => state.presentation);
     const title = useAppSelector(state => state.presentation.title);
     const selection = useAppSelector(state => state.presentation.selection);
     const activeSlideId = useAppSelector(state => state.presentation.activeSlideId);
@@ -17,6 +18,30 @@ export default function Editor(){
         undo, redo
     } = useAppActions();
 
+    function saveToJson(){
+        const presentationName = title + ".json";
+        const newVariable: any = window.navigator;
+        const presentationToSave: Presentation = {
+            ...presentation,
+            selection: {type: 'slide', value: []}
+        }
+        const presentationFile = new Blob([JSON.stringify(presentationToSave)], {type: 'json'});
+        if (newVariable && newVariable.msSaveOrOpenBlob) {
+            newVariable.msSaveOrOpenBlob(presentationFile, presentationName);
+        } else {
+            const a = document.createElement('a'),
+                url = URL.createObjectURL(presentationFile);
+            a.href = url;
+            a.download = presentationName;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        }
+    }
+
     let isTextElementsSelected = true;
 
     if (selection.type !== 'element' || selection.value.length === 0)
@@ -27,7 +52,7 @@ export default function Editor(){
             for (let element of activeSlideData)
                 if (element.type !== 'text')
                     isTextElementsSelected = false;
-//{`material-symbols-outlined ${styles.clickButton}`}
+
     return <>
         <div>
             <input className={styles.title} defaultValue={title} style={{width: title.length, minWidth: 300}}/>
@@ -37,9 +62,6 @@ export default function Editor(){
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Delete slide" onClick={() => deleteSlide()}>delete</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Undo" onClick={() => undo()}>undo</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Redo" onClick={() => redo()}>redo</span>
-            {/*<span className={`material-symbols-outlined ${styles.clickButton}`} title="Add rectangle">rectangle</span>*/}
-            {/*<span className={`material-symbols-outlined ${styles.clickButton}`} title="Add triangle">change_history</span>*/}
-            {/*<span className={`material-symbols-outlined ${styles.clickButton}`} title="Add circle">circle</span>*/}
             <label htmlFor="select_pic">
                 <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add image">image</span>
             </label>
@@ -87,9 +109,9 @@ export default function Editor(){
                 </div>
             )}
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Save to pdf">picture_as_pdf</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Save to JSON">save</span>
-            {/*<span className={`material-symbols-outlined ${styles.clickButton}`} title="Upload presentation">upload</span>*/}
-            {/*<span className={`material-symbols-outlined ${styles.clickButton}`} title="Preview">preview</span>*/}
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToJson()} title="Save to JSON">save</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Upload presentation">upload</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Preview">preview</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Up to front">move_selection_down</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Push down">move_selection_up</span>
             <label htmlFor="select_color">
@@ -130,3 +152,4 @@ function getBase64(file: File): Promise<string> {
         reader.onerror = error => reject(error);
     });
 }
+

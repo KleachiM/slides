@@ -111,3 +111,21 @@ export const redo = () => (
         type: ActionType.REOO
     }
 )
+
+export const toJson = () => (
+    {
+        type: ActionType.TO_JSON
+    }
+)
+
+export const fromJson = () => (
+    {
+        type: ActionType.FROM_JSON
+    }
+)
+
+export const toPdf = () => (
+    {
+        type: ActionType.TO_PDF
+    }
+)

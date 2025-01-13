@@ -1,6 +1,7 @@
 import {Block, Presentation} from "../types/presentationTypes";
 import * as actions from "../actions/actions";
 import {ActionType} from "../types/actionTypes";
+import {createStore} from "redux";
 
 export const defaultBlock: Block = {
     id: 'id',
@@ -8,7 +9,7 @@ export const defaultBlock: Block = {
     dimension: {width: 50, height: 50}
 }
 
-const initialPresentation: Presentation = {
+export const initialPresentation: Presentation = {
     title: 'New presentation',
     slides: [
         {
@@ -88,13 +89,31 @@ type StateType = {
     redoStack: Array<Presentation>
 }
 
+
+// Загрузка состояния из localStorage
+const loadStateFromLocalStorage = () => {
+    try {
+        const serializedState = localStorage.getItem('appState');
+        return serializedState ? JSON.parse(serializedState) : initialPresentation;
+    } catch (error) {
+        console.error('Failed to load state:', error);
+        return initialPresentation;
+    }
+};
+
 const initialState: StateType = {
     presentation: initialPresentation,
     undoStack: [],
     redoStack: []
 }
 
-export default function appReducer(state = initialState, action){
+// const initialState: StateType = {
+//     presentation: loadStateFromLocalStorage(),
+//     undoStack: [],
+//     redoStack: []
+// }
+
+export function appReducer(state = initialState, action){
     const {presentation, undoStack, redoStack} = state;
     console.log(`calling with action: ${action.type}`)
     switch (action.type){
@@ -253,3 +272,13 @@ export default function appReducer(state = initialState, action){
 //             return state;
 //     }
 // }
+
+// Сохранение состояния в localStorage
+export const saveStateToLocalStorage = (state: Presentation) => {
+    try {
+        const serializedState = JSON.stringify(state);
+        localStorage.setItem('appState', serializedState);
+    } catch (error) {
+        console.error('Failed to save state:', error);
+    }
+};

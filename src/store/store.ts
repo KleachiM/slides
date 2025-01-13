@@ -1,9 +1,14 @@
 import {bindActionCreators, createStore} from 'redux'
-import appReducer from "./reducer";
+import {appReducer, saveStateToLocalStorage} from "./reducer";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import * as AppActionCreators from "../actions/action-creator"
 
-const store = createStore(appReducer)
+const store = createStore(appReducer);
+
+// Подписка на изменения Store
+store.subscribe(() => {
+    saveStateToLocalStorage(store.getState().presentation);
+});
 
 type RootState = ReturnType<typeof appReducer>
 
