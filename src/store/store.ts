@@ -7,7 +7,7 @@ const store = createStore(appReducer);
 
 // Подписка на изменения Store
 store.subscribe(() => {
-    saveStateToLocalStorage(store.getState().presentation);
+    saveStateToLocalStorage(store.getState().presentation.presentation);
 });
 
 type RootState = ReturnType<typeof appReducer>

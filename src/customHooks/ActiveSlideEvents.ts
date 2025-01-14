@@ -1,10 +1,9 @@
-import {Dispatch, RefObject, SetStateAction, useEffect} from "react";
+import {RefObject, useEffect} from "react";
 import {useAppActions} from "../store/store";
 import {SelectionType} from "../types/presentationTypes";
 
 type ActiveSlideEventsProps = {
     slideRef: RefObject<HTMLDivElement | null>,
-    // SetSelectionVisibility: Dispatch<SetStateAction<boolean>> | undefined,
 }
 export function useActiveSlideEvents(props: ActiveSlideEventsProps){
     const {setSelection} = useAppActions();
@@ -18,9 +17,6 @@ export function useActiveSlideEvents(props: ActiveSlideEventsProps){
 
         const emptySelection: SelectionType = {type: 'element', value: []};
         setSelection(emptySelection);
-
-        // if (props.SetSelectionVisibility)
-        //     props.SetSelectionVisibility(false);
 
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);

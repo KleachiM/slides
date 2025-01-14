@@ -112,21 +112,21 @@ export const redo = () => (
     }
 )
 
-export const toJson = () => (
-    {
-        type: ActionType.TO_JSON
-    }
-)
-
-export const fromJson = (jsonFile) => (
+export const fromJson = (jsonFileContent) => (
     {
         type: ActionType.FROM_JSON,
-        payload: jsonFile
+        payload: jsonFileContent
     }
 )
 
-export const toPdf = () => (
+export const setFullScreen = () => (
     {
-        type: ActionType.TO_PDF
+        type: ActionType.FULL_SCREEN
+    }
+)
+
+export const exitFullScreen = () => (
+    {
+        type: ActionType.EXIT_FULL_SCREEN
     }
 )

@@ -7,9 +7,9 @@ import {useActiveSlideEvents} from "../../customHooks/ActiveSlideEvents";
 
 //todo: в контектсте использовать границы слайда
 export default function ActiveSlide(){
-    const activeSlideId = useAppSelector(state => state.presentation.activeSlideId);
-    const selection = useAppSelector(state => state.presentation.selection);
-    const slides = useAppSelector(state => state.presentation.slides);
+    const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
+    const selection = useAppSelector(state => state.presentation.presentation.selection);
+    const slides = useAppSelector(state => state.presentation.presentation.slides);
     const slide = slides.find(s => s.id === activeSlideId) || slides[0];
 
     const [deltaPoint, setPointDelta] = useState({x: 0, y: 0});
@@ -68,45 +68,6 @@ export default function ActiveSlide(){
             setSelectionHeight(maxY);
         }
     }, [selection.value, slide.slideData]);
-
-    // // region UseEffectSelection
-    // const isElementsSelectionEmpty = selection.type !== 'element' && selection.value.length === 0;
-    // setSelectionX(isElementsSelectionEmpty
-    //     ? -1
-    //     : slide.slideData.reduce((minVal, item) =>
-    //             selection.value.includes(item.id) && item.point.x < minVal
-    //                 ? item.point.x
-    //                 : minVal,
-    //         Infinity)
-    // );
-    //
-    // setSelectionY(isElementsSelectionEmpty
-    //     ? -1
-    //     : slide.slideData.reduce((minVal, item) =>
-    //             selection.value.includes(item.id) && item.point.y < minVal
-    //                 ? item.point.y
-    //                 : minVal,
-    //         Infinity)
-    // );
-    //
-    // setSelectionWidth(isElementsSelectionEmpty
-    //     ? -1
-    //     : slide.slideData.reduce((maxVal, item) =>
-    //             selection.value.includes(item.id) && (item.point.x + item.dimension.width - selectionX) > maxVal
-    //                 ? (item.point.x + item.dimension.width - selectionX)
-    //                 : maxVal,
-    //         -1)
-    // );
-    //
-    // setSelectionHeight(isElementsSelectionEmpty
-    //     ? -1
-    //     : slide.slideData.reduce((maxVal, item) =>
-    //             selection.value.includes(item.id) && (item.point.y + item.dimension.height - selectionY) > maxVal
-    //                 ? (item.point.y + item.dimension.height - selectionY)
-    //                 : maxVal,
-    //         -1));
-    //
-    // // endregion
 
     return <div className={styles.slideBorder}>
         <div

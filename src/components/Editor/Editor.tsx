@@ -1,24 +1,31 @@
 import React from "react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import styles from './Editor.module.css'
 import {useAppActions, useAppSelector} from "../../store/store";
 import {Presentation, TextBlock} from "../../types/presentationTypes";
 import {DelayedInput} from "../DelayedInput/DelayedInput";
 
-export default function Editor(){
-    const presentation = useAppSelector(state => state.presentation);
-    const title = useAppSelector(state => state.presentation.title);
-    const selection = useAppSelector(state => state.presentation.selection);
-    const activeSlideId = useAppSelector(state => state.presentation.activeSlideId);
-    const slides = useAppSelector(state => state.presentation.slides);
+type EditorProps = {
+    appRef: React.RefObject<HTMLDivElement>
+}
+
+export default function Editor(props: EditorProps) {
+    const presentation = useAppSelector(state => state.presentation.presentation);
+    const title = useAppSelector(state => state.presentation.presentation.title);
+    const selection = useAppSelector(state => state.presentation.presentation.selection);
+    const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
+    const slides = useAppSelector(state => state.presentation.presentation.slides);
     const activeSlide = slides.find(s => s.id === activeSlideId) || slides[0];
     const activeSlideData = activeSlide.slideData;
     const {
         addSlide, deleteSlide, addImage, changeTextProperty,
         changeFontSize, changeItalic, changeUnderline, changeBold,
-        undo, redo, fromJson
+        undo, redo, fromJson,
+        setFullScreen
     } = useAppActions();
 
-    function saveToJson(){
+    function saveToJson() {
         const presentationName = title + ".json";
         const newVariable: any = window.navigator;
         const presentationToSave: Presentation = {
@@ -42,6 +49,23 @@ export default function Editor(){
         }
     }
 
+    const saveToPdf = async () => {
+        console.log("saveToPdf");
+        if (!props.appRef.current)
+            return;
+
+        console.log("saveToPdf after first");
+        const canvas = await html2canvas(props.appRef.current);
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save("document.pdf");
+    };
+
     let isTextElementsSelected = true;
 
     if (selection.type !== 'element' || selection.value.length === 0)
@@ -58,10 +82,14 @@ export default function Editor(){
             <input className={styles.title} defaultValue={title} style={{width: title.length, minWidth: 300}}/>
         </div>
         <div className={styles.tools}>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add slide" onClick={() => addSlide()}>add</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Delete slide" onClick={() => deleteSlide()}>delete</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Undo" onClick={() => undo()}>undo</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Redo" onClick={() => redo()}>redo</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add slide"
+                  onClick={() => addSlide()}>add</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Delete slide"
+                  onClick={() => deleteSlide()}>delete</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Undo"
+                  onClick={() => undo()}>undo</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Redo"
+                  onClick={() => redo()}>redo</span>
             <label htmlFor="select_pic">
                 <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add image">image</span>
             </label>
@@ -108,27 +136,32 @@ export default function Editor(){
                     }}>format_underlined</span>
                 </div>
             )}
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Save to pdf">picture_as_pdf</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToJson()} title="Save to JSON">save</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToPdf()}
+                  title="Save to pdf">picture_as_pdf</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToJson()}
+                  title="Save to JSON">save</span>
             <label htmlFor="select_json">
-                <span className={`material-symbols-outlined ${styles.clickButton}`} title="Upload presentation">upload</span>
+                <span className={`material-symbols-outlined ${styles.clickButton}`}
+                      title="Upload presentation">upload</span>
             </label>
             <input
                 type={'file'}
                 id="select_json"
                 onChange={async (ev) => {
-                    const res = await getBase64((ev.target.files || [])[0] as File);
-                    console.log("uploading pres")
-
+                    const content = await getJsonFileContent((ev.target.files || [])[0] as File);
+                    fromJson(content);
                 }}
                 style={{display: 'none'}}
             />
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Preview">preview</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Up to front">move_selection_down</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Push down">move_selection_up</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => setFullScreen()} title="Preview">preview</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`}
+                  title="Up to front">move_selection_down</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`}
+                  title="Push down">move_selection_up</span>
             <label htmlFor="select_color">
                 <div className={styles.buttonsPanel}>
-                    <span className={`material-symbols-outlined ${styles.clickButton}`} title="Color fill">format_color_fill</span>
+                    <span className={`material-symbols-outlined ${styles.clickButton}`}
+                          title="Color fill">format_color_fill</span>
                 </div>
             </label>
             <input
@@ -140,7 +173,8 @@ export default function Editor(){
                 style={{display: 'none'}}
             />
             <label htmlFor="select_bkgr">
-                <span className={`material-symbols-outlined ${styles.clickButton}`} title="Change background">background_replace</span>
+                <span className={`material-symbols-outlined ${styles.clickButton}`}
+                      title="Change background">background_replace</span>
             </label>
             <input
                 type={'file'}
@@ -153,6 +187,20 @@ export default function Editor(){
             />
         </div>
     </>
+}
+
+function getJsonFileContent(file: File): Promise<string> {
+    console.log("getting content")
+    return new Promise((resolve, reject) => {
+        if (!file) reject('not found file');
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = (e) => {
+            const target: any = e.target;
+            resolve(target.result as string);
+        };
+        reader.onerror = error => reject(error);
+    });
 }
 
 function getBase64(file: File): Promise<string> {

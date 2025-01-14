@@ -10,8 +10,8 @@ type MiniatureProps = {
 }
 export default function Miniature(props: MiniatureProps){
     const {setActiveSlide, changeSlidePosition} = useAppActions();
-    const slides = useAppSelector(state => state.presentation.slides);
-    const activeSlideId = useAppSelector(state => state.presentation.activeSlideId);
+    const slides = useAppSelector(state => state.presentation.presentation.slides);
+    const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
 
     const miniatureRef = useRef<HTMLDivElement>(null);
 

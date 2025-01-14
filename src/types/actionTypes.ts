@@ -18,4 +18,6 @@ export enum ActionType {
     TO_JSON = 'TO_JSON',
     FROM_JSON = 'FROM_JSON',
     TO_PDF = 'TO_PDF',
+    FULL_SCREEN = 'FULL_SCREEN',
+    EXIT_FULL_SCREEN = 'EXIT_FULL_SCREEN',
 }

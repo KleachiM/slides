@@ -9,6 +9,7 @@ import {
     Image,
     SelectionType
 } from '../types/presentationTypes';
+import {isJsonValid} from "../utils/utils";
 
 function getRandomString(): string {
     return `${new Date().getTime()}${Math.random()}`;
@@ -383,7 +384,17 @@ export function setSelection(presentation: Presentation, newSelection: Selection
     }
 }
 
-export function getPresentationFromJson(presentation: Presentation, fileName: string): Presentation{
+export function getPresentationFromJson(presentation: Presentation, jsonContent: string): Presentation{
+    if (!isJsonValid(jsonContent))
+        return presentation;
 
-    return presentation;
+    const presFromJson = JSON.parse(jsonContent);
+    const activeSlideId = presFromJson.slides.length > 0 ? presFromJson.slides[0].id : "";
+    return {
+        ...presentation,
+        title: presFromJson.title,
+        slides: presFromJson.slides,
+        activeSlideId: activeSlideId,
+        selection: {type: 'slide', value: []},
+    }
 }

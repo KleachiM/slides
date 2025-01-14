@@ -1,7 +1,9 @@
 import {Block, Presentation} from "../types/presentationTypes";
 import * as actions from "../actions/actions";
 import {ActionType} from "../types/actionTypes";
-import {createStore} from "redux";
+import {combineReducers, createStore} from "redux";
+import {getPresentationFromJson} from "../actions/actions";
+import styles from "../components/ActiveSlide/ActiveSlide.module.css"
 
 export const defaultBlock: Block = {
     id: 'id',
@@ -113,9 +115,9 @@ const initialState: StateType = {
 //     redoStack: []
 // }
 
-export function appReducer(state = initialState, action){
+function presentationReducer(state = initialState, action){
+    // alert("Раскомментировать для localStorage")
     const {presentation, undoStack, redoStack} = state;
-    console.log(`calling with action: ${action.type}`)
     switch (action.type){
         case ActionType.MOVE_ELEMENTS:
             return {
@@ -204,10 +206,50 @@ export function appReducer(state = initialState, action){
                 undoStack: [...undoStack, presentation],
                 redoStack: newRedoStack
             }
+        case ActionType.FROM_JSON:
+            return {
+                presentation: getPresentationFromJson(presentation, action.payload),
+                undoStack: [],
+                redoStack: []
+            }
         default:
             return state;
     }
 }
+
+type EditorState = {
+    fullscreenMode: boolean,
+}
+
+const initialEditor: EditorState = {
+    fullscreenMode: false,
+}
+
+function editorReducer(state = initialEditor, action){
+    switch (action.type) {
+        case ActionType.FULL_SCREEN:
+            console.log("FULL_SCREEN")
+            const selector = styles.slide
+            const elem = document.querySelector(`.${selector}`);
+            elem?.requestFullscreen();
+            return {
+                ...state,
+                fullscreenMode: true
+            }
+        case ActionType.EXIT_FULL_SCREEN:
+            return {
+                ...state,
+                fullscreenMode: false
+            }
+        default:
+            return state;
+    }
+}
+
+export const appReducer = combineReducers({
+    presentation: presentationReducer,
+    editor: editorReducer
+})
 
 // export default function appReducer(state = initialState, action){
 //     let newPresentation;
