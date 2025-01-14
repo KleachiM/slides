@@ -15,7 +15,7 @@ export default function Editor(){
     const {
         addSlide, deleteSlide, addImage, changeTextProperty,
         changeFontSize, changeItalic, changeUnderline, changeBold,
-        undo, redo
+        undo, redo, fromJson
     } = useAppActions();
 
     function saveToJson(){
@@ -110,7 +110,19 @@ export default function Editor(){
             )}
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Save to pdf">picture_as_pdf</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToJson()} title="Save to JSON">save</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Upload presentation">upload</span>
+            <label htmlFor="select_json">
+                <span className={`material-symbols-outlined ${styles.clickButton}`} title="Upload presentation">upload</span>
+            </label>
+            <input
+                type={'file'}
+                id="select_json"
+                onChange={async (ev) => {
+                    const res = await getBase64((ev.target.files || [])[0] as File);
+                    console.log("uploading pres")
+
+                }}
+                style={{display: 'none'}}
+            />
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Preview">preview</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Up to front">move_selection_down</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Push down">move_selection_up</span>

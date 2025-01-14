@@ -118,9 +118,10 @@ export const toJson = () => (
     }
 )
 
-export const fromJson = () => (
+export const fromJson = (jsonFile) => (
     {
-        type: ActionType.FROM_JSON
+        type: ActionType.FROM_JSON,
+        payload: jsonFile
     }
 )
 

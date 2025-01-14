@@ -382,3 +382,8 @@ export function setSelection(presentation: Presentation, newSelection: Selection
         selection: newSelection
     }
 }
+
+export function getPresentationFromJson(presentation: Presentation, fileName: string): Presentation{
+
+    return presentation;
+}
