@@ -365,7 +365,7 @@ export function changeItalic(presentation: Presentation): Presentation{
 }
 export function changeSlideBackground(presentation: Presentation, newBckgr: string|Image): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
-
+    console.log(`new bckgr: ${newBckgr}`)
     const newSlides = [...presentation.slides];
     newSlides[activeSlideIndex] = {
         ...newSlides[activeSlideIndex],

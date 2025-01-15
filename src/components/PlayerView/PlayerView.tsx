@@ -1,13 +1,12 @@
-import React, {useEffect, useRef, useState} from "react";
 import {useAppSelector} from "../../store/store";
+import React, {useEffect, useRef, useState} from "react";
+import {useActiveSlideEvents} from "../../customHooks/ActiveSlideEvents";
+import styles from "../ActiveSlide/ActiveSlide.module.css";
 import {SlideElementsItem} from "../SlideElementsItem";
 import SelectionElement from "../Selection/SelectionElement";
-import styles from './ActiveSlide.module.css'
-import {useActiveSlideEvents} from "../../customHooks/ActiveSlideEvents";
-import {Image} from "../../types/presentationTypes";
+import {useChangeFullScreenHandler, useDocumentKeyHandler} from "../../customHooks/DocumentKeyEvents";
 
-//todo: в контектсте использовать границы слайда
-export default function ActiveSlide(){
+export default function PlayerView(){
     const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
     const selection = useAppSelector(state => state.presentation.presentation.selection);
     const slides = useAppSelector(state => state.presentation.presentation.slides);
@@ -32,25 +31,25 @@ export default function ActiveSlide(){
     const minX = selection.type !== 'element' && selection.value.length === 0
         ? -1
         : slide.slideData.reduce((minVal, item) =>
-            selection.value.includes(item.id) && item.point.x < minVal
-                ? item.point.x
-                : minVal,
+                selection.value.includes(item.id) && item.point.x < minVal
+                    ? item.point.x
+                    : minVal,
             Infinity);
 
     const minY = selection.type !== 'element' && selection.value.length === 0
         ? -1
         : slide.slideData.reduce((minVal, item) =>
-            selection.value.includes(item.id) && item.point.y < minVal
-                ? item.point.y
-                : minVal,
+                selection.value.includes(item.id) && item.point.y < minVal
+                    ? item.point.y
+                    : minVal,
             Infinity);
 
     const maxX = selection.type !== 'element' && selection.value.length === 0
         ? -1
         : slide.slideData.reduce((maxVal, item) =>
-            selection.value.includes(item.id) && (item.point.x + item.dimension.width - minX) > maxVal
-                ? (item.point.x + item.dimension.width - minX)
-                : maxVal,
+                selection.value.includes(item.id) && (item.point.x + item.dimension.width - minX) > maxVal
+                    ? (item.point.x + item.dimension.width - minX)
+                    : maxVal,
             -1);
 
     const maxY = selection.type !== 'element' && selection.value.length === 0
@@ -72,9 +71,12 @@ export default function ActiveSlide(){
     }, [selection.value, slide.slideData]);
 
 // no-repeat center / color
-    return <div className={styles.slideBorder}>
+    useDocumentKeyHandler();
+    useChangeFullScreenHandler();
+
+    return <div className={`${styles.slideBorder} ${styles.preview}`}>
         <div
-            className={styles.slide}
+            className={`${styles.slide} ${styles.preview}`}
             style={typeof slide.background === "string"
                 ? {backgroundColor: slide.background}
                 : {backgroundImage: slide.background.source}}

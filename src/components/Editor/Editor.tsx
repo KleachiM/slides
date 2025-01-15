@@ -5,6 +5,7 @@ import styles from './Editor.module.css'
 import {useAppActions, useAppSelector} from "../../store/store";
 import {Presentation, TextBlock} from "../../types/presentationTypes";
 import {DelayedInput} from "../DelayedInput/DelayedInput";
+import {useNavigate} from "react-router";
 
 type EditorProps = {
     appRef: React.RefObject<HTMLDivElement>
@@ -19,12 +20,12 @@ export default function Editor(props: EditorProps) {
     const activeSlide = slides.find(s => s.id === activeSlideId) || slides[0];
     const activeSlideData = activeSlide.slideData;
     const {
-        addSlide, deleteSlide, addImage, changeTextProperty,
+        addSlide, deleteSlide, addImage, addText, changeTextProperty,
         changeFontSize, changeItalic, changeUnderline, changeBold,
-        undo, redo, fromJson,
+        undo, redo, fromJson, setBackgroundColor, setBackgroundImage,
         setFullScreen
     } = useAppActions();
-
+    const navigate = useNavigate();
     function saveToJson() {
         const presentationName = title + ".json";
         const newVariable: any = window.navigator;
@@ -102,7 +103,7 @@ export default function Editor(props: EditorProps) {
                 }}
                 style={{display: 'none'}}
             />
-            <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add text">text_fields</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => {addText()}} title="Add text">text_fields</span>
             {isTextElementsSelected && (
                 <div className={styles.buttonsPanel}>
                     <select onChange={(ev: React.ChangeEvent<HTMLSelectElement>) => {
@@ -153,7 +154,7 @@ export default function Editor(props: EditorProps) {
                 }}
                 style={{display: 'none'}}
             />
-            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => setFullScreen()} title="Preview">preview</span>
+            <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => navigate("/player")} title="Preview">preview</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`}
                   title="Up to front">move_selection_down</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`}
@@ -168,7 +169,8 @@ export default function Editor(props: EditorProps) {
                 type={'color'}
                 id="select_color"
                 onChange={async (ev) => {
-
+                    const res = ev.target.value
+                    setBackgroundColor(res)
                 }}
                 style={{display: 'none'}}
             />
@@ -181,7 +183,7 @@ export default function Editor(props: EditorProps) {
                 id="select_bkgr"
                 onChange={async (ev) => {
                     const res = await getBase64((ev.target.files || [])[0] as File);
-                    addImage(res);
+                    setBackgroundImage(res);
                 }}
                 style={{display: 'none'}}
             />

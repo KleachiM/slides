@@ -1,9 +1,11 @@
 import {Block, Presentation} from "../types/presentationTypes";
 import * as actions from "../actions/actions";
 import {ActionType} from "../types/actionTypes";
-import {combineReducers, createStore} from "redux";
+import {combineReducers} from "redux";
 import {getPresentationFromJson} from "../actions/actions";
 import styles from "../components/ActiveSlide/ActiveSlide.module.css"
+import {isJsonValid} from "../utils/utils";
+import {json} from "stream/consumers";
 
 export const defaultBlock: Block = {
     id: 'id',
@@ -96,24 +98,29 @@ type StateType = {
 const loadStateFromLocalStorage = () => {
     try {
         const serializedState = localStorage.getItem('appState');
-        return serializedState ? JSON.parse(serializedState) : initialPresentation;
+
+        let presentation = initialPresentation;
+        if (serializedState && isJsonValid(serializedState))
+            presentation = JSON.parse(serializedState);
+
+        return presentation
     } catch (error) {
         console.error('Failed to load state:', error);
         return initialPresentation;
     }
 };
 
-const initialState: StateType = {
-    presentation: initialPresentation,
-    undoStack: [],
-    redoStack: []
-}
-
 // const initialState: StateType = {
-//     presentation: loadStateFromLocalStorage(),
+//     presentation: initialPresentation,
 //     undoStack: [],
 //     redoStack: []
 // }
+
+const initialState: StateType = {
+    presentation: loadStateFromLocalStorage(),
+    undoStack: [],
+    redoStack: []
+}
 
 function presentationReducer(state = initialState, action){
     // alert("Раскомментировать для localStorage")
@@ -158,6 +165,12 @@ function presentationReducer(state = initialState, action){
         case ActionType.ADD_IMAGE:
             return {
                 presentation: actions.addImageBlock(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
+        case ActionType.ADD_TEXT:
+            return {
+                presentation: actions.addTextBlock(presentation),
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
@@ -212,6 +225,18 @@ function presentationReducer(state = initialState, action){
                 undoStack: [],
                 redoStack: []
             }
+        case ActionType.SET_BACKGROUND_COLOR:
+            return {
+                presentation: actions.changeSlideBackground(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
+        case ActionType.SET_BACKGROUND_IMAGE:
+            return {
+                presentation: actions.changeSlideBackground(presentation, action.payload),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         default:
             return state;
     }
@@ -228,7 +253,6 @@ const initialEditor: EditorState = {
 function editorReducer(state = initialEditor, action){
     switch (action.type) {
         case ActionType.FULL_SCREEN:
-            console.log("FULL_SCREEN")
             const selector = styles.slide
             const elem = document.querySelector(`.${selector}`);
             elem?.requestFullscreen();

@@ -47,6 +47,11 @@ export const addImage = src => (
     }
 )
 
+export const addText = () => (
+    {
+        type: ActionType.ADD_TEXT
+    }
+)
 export const changeTextProperty = (propName, propValue) => (
     {
         type: ActionType.SET_TEXT_PROPERTY,

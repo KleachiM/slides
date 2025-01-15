@@ -8,7 +8,6 @@ export function useDocumentKeyHandler(){
     const {setActiveSlide} = useAppActions();
     useEffect(()=>{
         const onKeyDownHandler = (event: KeyboardEvent) => {
-            if (isFullScreen) {
                 const activeSlideIndex = slides.findIndex(s => s.id === activeSlideId);
                 if (event.key === "Space" || event.key === "ArrowRight") {
                     if (activeSlideIndex > -1 && activeSlideIndex < slides.length - 1) {
@@ -20,7 +19,6 @@ export function useDocumentKeyHandler(){
                         setActiveSlide(slides[activeSlideIndex - 1].id);
                     }
                 }
-            }
         }
 
         document.addEventListener('keydown', onKeyDownHandler);

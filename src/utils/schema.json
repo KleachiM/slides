@@ -1,0 +1,236 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ImageBlock": {
+            "allOf": [
+                {
+                    "properties": {
+                        "dimension": {
+                            "properties": {
+                                "height": {
+                                    "type": "number"
+                                },
+                                "width": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "height",
+                                "width"
+                            ],
+                            "type": "object"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "point": {
+                            "properties": {
+                                "x": {
+                                    "type": "number"
+                                },
+                                "y": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "dimension",
+                        "id",
+                        "point"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "source": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "const": "image",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "source",
+                        "type"
+                    ],
+                    "type": "object"
+                }
+            ]
+        },
+        "SlideElement": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ImageBlock"
+                },
+                {
+                    "$ref": "#/definitions/TextBlock"
+                }
+            ]
+        },
+        "TextBlock": {
+            "allOf": [
+                {
+                    "properties": {
+                        "dimension": {
+                            "properties": {
+                                "height": {
+                                    "type": "number"
+                                },
+                                "width": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "height",
+                                "width"
+                            ],
+                            "type": "object"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "point": {
+                            "properties": {
+                                "x": {
+                                    "type": "number"
+                                },
+                                "y": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "dimension",
+                        "id",
+                        "point"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "content": {
+                            "type": "string"
+                        },
+                        "fontColor": {
+                            "type": "string"
+                        },
+                        "fontFamily": {
+                            "type": "string"
+                        },
+                        "fontSize": {
+                            "type": "number"
+                        },
+                        "type": {
+                            "const": "text",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "content",
+                        "fontColor",
+                        "fontFamily",
+                        "fontSize",
+                        "type"
+                    ],
+                    "type": "object"
+                }
+            ]
+        }
+    },
+    "properties": {
+        "activeSlideId": {
+            "type": "string"
+        },
+        "selection": {
+            "properties": {
+                "type": {
+                    "enum": [
+                        "element",
+                        "slide"
+                    ],
+                    "type": "string"
+                },
+                "value": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "type",
+                "value"
+            ],
+            "type": "object"
+        },
+        "slides": {
+            "items": {
+                "properties": {
+                    "background": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "source": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "const": "image",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "source",
+                                    "type"
+                                ],
+                                "type": "object"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "slideData": {
+                        "items": {
+                            "$ref": "#/definitions/SlideElement"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "background",
+                    "id",
+                    "slideData"
+                ],
+                "type": "object"
+            },
+            "type": "array"
+        },
+        "title": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "activeSlideId",
+        "selection",
+        "slides",
+        "title"
+    ],
+    "type": "object"
+}
+
