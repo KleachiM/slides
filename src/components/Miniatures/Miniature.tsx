@@ -1,19 +1,24 @@
-import {Slide} from "../../types/presentationTypes";
+import {Image, Slide} from "../../types/presentationTypes";
 import {SlideElementsItem} from "../SlideElementsItem";
-import React, {useEffect, useRef, useState} from "react";
+import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import {useAppActions, useAppSelector} from "../../store/store";
 import styles from "./Miniatures.module.css"
+import {backGroundTypeIsImage} from "../../utils/utils";
+
+type AddToRefsType = (el: HTMLDivElement) => void;
 
 type MiniatureProps = {
     slide: Slide,
     activeSlideId: string,
+    // refs: MutableRefObject<HTMLDivElement[]>,
+    addToRefs: AddToRefsType
 }
 export default function Miniature(props: MiniatureProps){
     const {setActiveSlide, changeSlidePosition} = useAppActions();
     const slides = useAppSelector(state => state.presentation.presentation.slides);
     const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
 
-    const miniatureRef = useRef<HTMLDivElement>(null);
+    // const miniatureRef = useRef<HTMLDivElement>(null);
 
     const [draggedIndex, setDraggedIndex] = useState<number>(-1);
 
@@ -44,13 +49,20 @@ export default function Miniature(props: MiniatureProps){
         setActiveSlide(id);
     }
 
+    let style = {
+        backgroundColor: '',
+        backgroundImage: ''
+    }
+    if (backGroundTypeIsImage(props.slide.background))
+        style.backgroundImage = `url(${(props.slide.background as Image).source})`;
+    else
+        style.backgroundColor = `${props.slide.background}`
+
     return <div
         key={props.slide.id}
-        ref={miniatureRef}
+        ref={props.addToRefs}
         className={props.slide.id === props.activeSlideId ? `${styles.miniature} ${styles.active_slide}` : styles.miniature}
-        style={typeof props.slide.background === 'string'
-            ? {backgroundColor: props.slide.background}
-            : {backgroundImage: props.slide.background.source}}
+        style={style}
         onMouseDown={() => handleMouseDown(props.slide.id)}
         onDragStart={() => handleDragStart()}
         onDrop={() => handleDrop(props.slide.id)}

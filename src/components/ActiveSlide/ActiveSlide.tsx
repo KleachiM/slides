@@ -5,6 +5,8 @@ import SelectionElement from "../Selection/SelectionElement";
 import styles from './ActiveSlide.module.css'
 import {useActiveSlideEvents} from "../../customHooks/ActiveSlideEvents";
 import {Image} from "../../types/presentationTypes";
+import {backGroundTypeIsImage} from "../../utils/utils";
+import * as url from "url";
 
 //todo: в контектсте использовать границы слайда
 export default function ActiveSlide(){
@@ -71,13 +73,21 @@ export default function ActiveSlide(){
         }
     }, [selection.value, slide.slideData]);
 
+    let style = {
+        backgroundColor: '',
+        backgroundImage: ''
+    }
+    if (backGroundTypeIsImage(slide.background))
+        style.backgroundImage = `url(${(slide.background as Image).source})`;
+    else
+        style.backgroundColor = `${slide.background}`
+
+
 // no-repeat center / color
     return <div className={styles.slideBorder}>
         <div
             className={styles.slide}
-            style={typeof slide.background === "string"
-                ? {backgroundColor: slide.background}
-                : {backgroundImage: slide.background.source}}
+            style={style}
             ref={slideRef}
         >
             {slide.slideData.map(e =>

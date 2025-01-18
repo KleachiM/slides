@@ -22,4 +22,5 @@ export enum ActionType {
     TO_PDF = 'TO_PDF',
     FULL_SCREEN = 'FULL_SCREEN',
     EXIT_FULL_SCREEN = 'EXIT_FULL_SCREEN',
+    DELETE_ELEMENT = 'DELETE_ELEMENT',
 }

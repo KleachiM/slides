@@ -1,14 +1,14 @@
-import React from "react";
+import React, {MutableRefObject, useContext} from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import styles from './Editor.module.css'
 import {useAppActions, useAppSelector} from "../../store/store";
-import {Presentation, TextBlock} from "../../types/presentationTypes";
+import {Image, Presentation, TextBlock} from "../../types/presentationTypes";
 import {DelayedInput} from "../DelayedInput/DelayedInput";
 import {useNavigate} from "react-router";
 
 type EditorProps = {
-    appRef: React.RefObject<HTMLDivElement>
+    minRefs: MutableRefObject<HTMLDivElement[]>
 }
 
 export default function Editor(props: EditorProps) {
@@ -25,6 +25,9 @@ export default function Editor(props: EditorProps) {
         undo, redo, fromJson, setBackgroundColor, setBackgroundImage,
         setFullScreen
     } = useAppActions();
+
+    const minRefs = props.minRefs;
+
     const navigate = useNavigate();
     function saveToJson() {
         const presentationName = title + ".json";
@@ -50,21 +53,45 @@ export default function Editor(props: EditorProps) {
         }
     }
 
+    const waitForImagesToLoad = async (div: HTMLDivElement) => {
+        const images = Array.from(div.querySelectorAll("img"));
+        await Promise.all(
+            images.map(
+                (img) =>
+                    new Promise<void>((resolve, reject) => {
+                        if (img.complete) {
+                            resolve();
+                        } else {
+                            img.onload = () => resolve();
+                            img.onerror = () => reject(new Error(`Failed to load image: ${img.src}`));
+                        }
+                    })
+            )
+        );
+    };
+
     const saveToPdf = async () => {
-        console.log("saveToPdf");
-        if (!props.appRef.current)
-            return;
+        const pdf = new jsPDF();
+        const promises = minRefs.current.map(async (div, index) => {
+            await waitForImagesToLoad(div);
+            const canvas = await html2canvas(div, {
+                scale: 4, // Увеличиваем масштаб в 4 раза
+                imageTimeout: 15000,
+                useCORS: true
+            });
+//todo: настроить масштабирование при выгрузке в pdf
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 190; // ширина изображения в PDF
+            const pageHeight = 297; // высота страницы PDF в мм (A4)
+            // const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        console.log("saveToPdf after first");
-        const canvas = await html2canvas(props.appRef.current);
-        const imgData = canvas.toDataURL("image/png");
+            const imgHeight = 300;
+            if (index > 0) pdf.addPage(); // добавляем новую страницу для всех, кроме первой
+            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        });
 
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("document.pdf");
+        await Promise.all(promises);
+        pdf.save('output.pdf');
     };
 
     let isTextElementsSelected = true;
@@ -75,7 +102,7 @@ export default function Editor(props: EditorProps) {
     if (isTextElementsSelected)
         for (let id of selection.value)
             for (let element of activeSlideData)
-                if (element.type !== 'text')
+                if (id === element.id && element.type !== 'text')
                     isTextElementsSelected = false;
 
     return <>
@@ -183,6 +210,7 @@ export default function Editor(props: EditorProps) {
                 id="select_bkgr"
                 onChange={async (ev) => {
                     const res = await getBase64((ev.target.files || [])[0] as File);
+                    // const image: Image = {type: 'image', source: res}
                     setBackgroundImage(res);
                 }}
                 style={{display: 'none'}}
@@ -192,7 +220,6 @@ export default function Editor(props: EditorProps) {
 }
 
 function getJsonFileContent(file: File): Promise<string> {
-    console.log("getting content")
     return new Promise((resolve, reject) => {
         if (!file) reject('not found file');
         const reader = new FileReader();

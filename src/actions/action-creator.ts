@@ -75,8 +75,8 @@ export const setBackgroundColor = (color) => (
 
 export const setBackgroundImage = (src) => (
     {
-        type: ActionType.SET_BACKGROUND_COLOR,
-        payload: src
+        type: ActionType.SET_BACKGROUND_IMAGE,
+        payload: {type: 'image', source: src}
     }
 )
 
@@ -133,5 +133,11 @@ export const setFullScreen = () => (
 export const exitFullScreen = () => (
     {
         type: ActionType.EXIT_FULL_SCREEN
+    }
+)
+
+export const deleteElement = () => (
+    {
+        type: ActionType.DELETE_ELEMENT
     }
 )

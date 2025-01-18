@@ -128,10 +128,35 @@ export function deleteSlides(presentation: Presentation): Presentation{
         ? newSlides[newSlides.length - 1].id
         : '';
 
+    const newSelection: SelectionType = {type: 'slide', value: []};
     return {
         ...presentation,
         slides: newSlides,
-        activeSlideId: newActiveSlideIndex
+        activeSlideId: newActiveSlideIndex,
+        selection: newSelection
+    }
+}
+
+export function deleteElement(presentation: Presentation) {
+    const activeSlideIndex = presentation.slides.findIndex(
+        s => s.id === presentation.activeSlideId
+    );
+
+    const newSlide = {
+        ...presentation.slides[activeSlideIndex],
+        slideData: presentation.slides[activeSlideIndex].slideData.filter(
+            e => !presentation.selection.value.includes(e.id)
+        )
+    }
+
+    const newSlides = [...presentation.slides];
+    newSlides.splice(activeSlideIndex, 1, newSlide)
+
+    const newSelection: SelectionType = {type: "slide", value: [presentation.activeSlideId]};
+    return {
+        ...presentation,
+        slides: newSlides,
+        selection: newSelection
     }
 }
 
@@ -198,27 +223,6 @@ export function addImageBlock(presentation: Presentation, src: string): Presenta
         ...presentation,
         slides: slides,
         selection: {type: 'element', value: [defaultImageBlock.id]}
-    }
-}
-
-export function deleteElement(presentation: Presentation) {
-    const activeSlideIndex = presentation.slides.findIndex(
-        s => s.id === presentation.activeSlideId
-    );
-
-    const newSlide = {
-        ...presentation.slides[activeSlideIndex],
-        slideData: presentation.slides[activeSlideIndex].slideData.filter(
-            e => !presentation.selection.value.includes(e.id)
-        )
-    }
-
-    const newSlides = [...presentation.slides];
-    newSlides.splice(activeSlideIndex, 1, newSlide)
-
-    return {
-        ...presentation,
-        slides: newSlides,
     }
 }
 
@@ -365,12 +369,15 @@ export function changeItalic(presentation: Presentation): Presentation{
 }
 export function changeSlideBackground(presentation: Presentation, newBckgr: string|Image): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
-    console.log(`new bckgr: ${newBckgr}`)
+
+    console.log(`new bg: ${newBckgr}`)
     const newSlides = [...presentation.slides];
     newSlides[activeSlideIndex] = {
         ...newSlides[activeSlideIndex],
         background: newBckgr
     }
+
+    console.log("after setting")
     return {
         ...presentation,
         slides: newSlides

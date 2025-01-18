@@ -5,7 +5,8 @@ export function useDocumentKeyHandler(){
     const isFullScreen = useAppSelector(state => state.editor.fullscreenMode);
     const slides = useAppSelector(state => state.presentation.presentation.slides);
     const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
-    const {setActiveSlide} = useAppActions();
+    const selection = useAppSelector(state => state.presentation.presentation.selection);
+    const {setActiveSlide, deleteSlide, deleteElement} = useAppActions();
     useEffect(()=>{
         const onKeyDownHandler = (event: KeyboardEvent) => {
                 const activeSlideIndex = slides.findIndex(s => s.id === activeSlideId);
@@ -18,6 +19,13 @@ export function useDocumentKeyHandler(){
                     if (activeSlideIndex > 0 && activeSlideIndex < slides.length) {
                         setActiveSlide(slides[activeSlideIndex - 1].id);
                     }
+                }
+                if (event.key === "Backspace")
+                {
+                    if (selection.type === 'element')
+                        deleteElement()
+                    else
+                        deleteSlide()
                 }
         }
 

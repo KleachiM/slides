@@ -1,4 +1,4 @@
-import {Block, Presentation} from "../types/presentationTypes";
+import {Block, Image, Presentation} from "../types/presentationTypes";
 import * as actions from "../actions/actions";
 import {ActionType} from "../types/actionTypes";
 import {combineReducers} from "redux";
@@ -96,18 +96,19 @@ type StateType = {
 
 // Загрузка состояния из localStorage
 const loadStateFromLocalStorage = () => {
+    let presentation = initialPresentation;
     try {
         const serializedState = localStorage.getItem('appState');
 
-        let presentation = initialPresentation;
-        if (serializedState && isJsonValid(serializedState))
+        if (serializedState && isJsonValid(serializedState)){
             presentation = JSON.parse(serializedState);
+            presentation.selection = {type: 'slide', value: []}
+        }
 
-        return presentation
     } catch (error) {
         console.error('Failed to load state:', error);
-        return initialPresentation;
     }
+    return presentation;
 };
 
 // const initialState: StateType = {
@@ -162,6 +163,12 @@ function presentationReducer(state = initialState, action){
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
+        case ActionType.DELETE_ELEMENT:
+            return {
+                presentation: actions.deleteElement(state.presentation),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.ADD_IMAGE:
             return {
                 presentation: actions.addImageBlock(presentation, action.payload),
@@ -194,11 +201,9 @@ function presentationReducer(state = initialState, action){
             }
         case ActionType.UNDO:
             if (undoStack.length === 0){
-                console.log("undo length 0")
                 return state;
             }
 
-            console.log(`undoing. undo length: ${undoStack.length}`)
             const prevPres = undoStack[undoStack.length - 1];
             const newUndoStack = redoStack.slice(0, redoStack.length - 1);
 
@@ -232,8 +237,9 @@ function presentationReducer(state = initialState, action){
                 redoStack: []
             }
         case ActionType.SET_BACKGROUND_IMAGE:
+            const img: Image = {type: 'image', source: action.payload.source};
             return {
-                presentation: actions.changeSlideBackground(presentation, action.payload),
+                presentation: actions.changeSlideBackground(presentation, img),
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
