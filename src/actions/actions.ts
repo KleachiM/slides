@@ -288,6 +288,30 @@ export function resizeElement(presentation: Presentation, offsetPoint: Point, of
     }
 }
 
+// export function changeTextItalic(presentation: Presentation){
+//     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
+//
+//     const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
+//         if (presentation.selection.value.includes(element.id)){
+//             if (element.type !== 'text')
+//                 return element;
+//             element.
+//         }
+//         return element;
+//     });
+//
+//     const newSlides = [...presentation.slides];
+//     newSlides[activeSlideIndex] = {
+//         ...newSlides[activeSlideIndex],
+//         slideData: newActiveSlideData,
+//     };
+//
+//     return {
+//         ...presentation,
+//         slides: newSlides
+//     }
+// }
+
 export function changeTextBlockProperty(presentation: Presentation, propName: string, propValue: string|number): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
 

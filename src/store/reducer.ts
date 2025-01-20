@@ -243,6 +243,8 @@ function presentationReducer(state = initialState, action){
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
+        case ActionType.CHANGE_BOLD:
+
         default:
             return state;
     }
@@ -280,70 +282,6 @@ export const appReducer = combineReducers({
     presentation: presentationReducer,
     editor: editorReducer
 })
-
-// export default function appReducer(state = initialState, action){
-//     let newPresentation;
-//     const {presentation, undoStack, redoStack} = state;
-//     switch (action.type){
-//         case ActionType.MOVE_ELEMENTS:
-//             newPresentation = actions.moveElementByOffset(presentation, action.payload);
-//             break;
-//         case ActionType.RESIZE_ELEMENTS:
-//             newPresentation = actions.resizeElement(presentation, action.payload.positionOffset, action.payload.dimensionOffset);
-//             break;
-//         case ActionType.SET_SELECTION:
-//             newPresentation = actions.setSelection(presentation, action.payload);
-//             break;
-//         case ActionType.SET_ACTIVE_SLIDE:
-//             newPresentation = actions.setActiveSlide(presentation, action.payload);
-//             break;
-//         case ActionType.ADD_SLIDE:
-//             newPresentation = actions.addSlide(state.presentation);
-//             break;
-//         case ActionType.DELETE_SLIDE:
-//             newPresentation = actions.deleteSlides(state.presentation);
-//             break;
-//         case ActionType.ADD_IMAGE:
-//             newPresentation = actions.addImageBlock(presentation, action.payload);
-//             break;
-//         case ActionType.SET_TEXT_PROPERTY:
-//             newPresentation = actions.changeTextBlockProperty(presentation, action.payload.propName, action.payload.propValue);
-//             break;
-//         case ActionType.FONT_SIZE_INC_DEC:
-//             newPresentation = actions.fontSizeIncOrDec(presentation, action.payload);
-//             break;
-//         case ActionType.CHANGE_SLIDE_POSITION:
-//             newPresentation = actions.changeSlidePosition(presentation, action.payload);
-//             break;
-//         case ActionType.UNDO:
-//             if (undoStack.length === 0)
-//                 return state;
-//
-//             const prevPres = redoStack[redoStack.length - 1];
-//             const newUndoStack = redoStack.slice(0, redoStack.length - 1);
-//
-//             return {
-//                 presentation: prevPres,
-//                 undoStack: newUndoStack,
-//                 redoStack: [presentation, ...redoStack]
-//             }
-//         case ActionType.REOO:
-//             if (redoStack.length === 0)
-//                 return state;
-//
-//             const newPres = redoStack[0];
-//             const newRedoStack = redoStack.slice(1);
-//
-//             return {
-//                 presentation: newPres,
-//                 undoStack: [...undoStack, newPres],
-//                 redoStack: newRedoStack
-//             }
-//         default:
-//             console.log('return default')
-//             return state;
-//     }
-// }
 
 // Сохранение состояния в localStorage
 export const saveStateToLocalStorage = (state: Presentation) => {

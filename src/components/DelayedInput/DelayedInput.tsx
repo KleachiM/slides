@@ -41,6 +41,7 @@ export function DelayedInput(props: DelayedInputProps) {
         <input
             type="number"
             value={value}
+            style={{border: "solid", maxWidth: "30px", textAlign: "center"}}
             onChange={handleChange}
         />
     );

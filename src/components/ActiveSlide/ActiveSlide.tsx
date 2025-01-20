@@ -75,10 +75,17 @@ export default function ActiveSlide(){
 
     let style = {
         backgroundColor: '',
-        backgroundImage: ''
+        backgroundImage: '',
+        // backgroundSize: '',
+        backgroundPosition: '',
+        backgroundRepeat: ''
     }
-    if (backGroundTypeIsImage(slide.background))
+    if (backGroundTypeIsImage(slide.background)) {
         style.backgroundImage = `url(${(slide.background as Image).source})`;
+        // style.backgroundSize = 'cover';
+        style.backgroundPosition = 'center';
+        style.backgroundRepeat = 'no-repeat';
+    }
     else
         style.backgroundColor = `${slide.background}`
 

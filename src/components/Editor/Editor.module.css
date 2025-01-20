@@ -13,8 +13,9 @@
     min-width: 30%;
     font: 18px/30px sans-serif;
     padding: 2px 5px;
-    border: 1px solid white;
+    border: 1px solid #1917171c;
     border-radius: 4px;
+    margin: 5px;
 }
 
 .buttonsPanel {
@@ -37,6 +38,7 @@
     flex-direction: row;
     align-items: center;
     user-select: none;
+    margin: 10px;
 }
 
 .clickButton:hover, .active-tool {

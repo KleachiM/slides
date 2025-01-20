@@ -49,7 +49,9 @@ export type TextBlock = Block & {
     content: string,
     fontSize: number,
     fontColor: string,
-    fontFamily: string
+    fontFamily: string,
+    fontWeight: string,
+    fontStyle: string
 }
 
 export type SlideElement = TextBlock|ImageBlock;

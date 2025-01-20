@@ -42,6 +42,8 @@ export function SlideElementsItem(props: SlideElementProps){
                 position: "absolute",
                 fontFamily: props.slideElement.fontFamily,
                 fontSize: props.slideElement.fontSize,
+                fontStyle: props.slideElement.fontStyle,
+                fontWeight: props.slideElement.fontWeight
             }}
             defaultValue={props.slideElement.content}
             />
