@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useAppSelector} from "../../store/store";
+import {useAppActions, useAppSelector} from "../../store/store";
 import {SlideElementsItem} from "../SlideElementsItem";
 import SelectionElement from "../Selection/SelectionElement";
 import styles from './ActiveSlide.module.css'

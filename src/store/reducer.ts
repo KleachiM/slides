@@ -195,6 +195,12 @@ function presentationReducer(state = initialState, action){
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
+        case ActionType.SET_TEXT_VALUE:
+            return {
+                presentation: actions.changeTextBlockProperty(presentation, action.payload.propName, action.payload.propValue),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.FONT_SIZE_INC_DEC:
             return {
                 presentation: actions.fontSizeIncOrDec(presentation, action.payload),

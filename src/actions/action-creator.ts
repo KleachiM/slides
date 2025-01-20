@@ -59,6 +59,13 @@ export const changeTextProperty = (propName, propValue) => (
     }
 )
 
+export const setText = (propName, propValue) => (
+    {
+        type: ActionType.SET_TEXT_VALUE,
+        payload: {propName, propValue}
+    }
+)
+
 export const changeFontSize = (needToInc: boolean) => (
     {
         type: ActionType.FONT_SIZE_INC_DEC,

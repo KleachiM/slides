@@ -5,6 +5,8 @@ import styles from "../ActiveSlide/ActiveSlide.module.css";
 import {SlideElementsItem} from "../SlideElementsItem";
 import SelectionElement from "../Selection/SelectionElement";
 import {useChangeFullScreenHandler, useDocumentKeyHandler} from "../../customHooks/DocumentKeyEvents";
+import {backGroundTypeIsImage} from "../../utils/utils";
+import {Image} from "../../types/presentationTypes";
 
 export default function PlayerView(){
     const activeSlideId = useAppSelector(state => state.presentation.presentation.activeSlideId);
@@ -74,12 +76,26 @@ export default function PlayerView(){
     useDocumentKeyHandler();
     useChangeFullScreenHandler();
 
+    let style = {
+        backgroundColor: '',
+        backgroundImage: '',
+        backgroundSize: '',
+        backgroundPosition: '',
+        backgroundRepeat: ''
+    }
+    if (backGroundTypeIsImage(slide.background)) {
+        style.backgroundImage = `url(${(slide.background as Image).source})`;
+        style.backgroundSize = '100% 100%';
+        style.backgroundPosition = 'center';
+        style.backgroundRepeat = 'no-repeat';
+    }
+    else
+        style.backgroundColor = `${slide.background}`
+
     return <div className={`${styles.slideBorder} ${styles.preview}`}>
         <div
             className={`${styles.slide} ${styles.preview}`}
-            style={typeof slide.background === "string"
-                ? {backgroundColor: slide.background}
-                : {backgroundImage: slide.background.source}}
+            style={style}
             ref={slideRef}
         >
             {slide.slideData.map(e =>

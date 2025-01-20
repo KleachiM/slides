@@ -17,8 +17,8 @@ function getRandomString(): string {
 
 export const defaultBlock: Block = {
     id: getRandomString(),
-    point: {x: 10, y: 10},
-    dimension: {width: 50, height: 50}
+    point: {x: 50, y: 50},
+    dimension: {width: 300, height: 150}
 }
 
 const defaultTextBlock: TextBlock = {
@@ -47,7 +47,7 @@ function getDefaultTextBlock(): TextBlock{
             height: defaultBlock.dimension.height
         },
         content: '',
-        fontSize: 10,
+        fontSize: 25,
         fontColor: 'black',
         fontFamily: 'serif',
         fontWeight: "normal",
@@ -346,6 +346,7 @@ export function changeTextBlockProperty(presentation: Presentation, propName: st
         slideData: newActiveSlideData,
     };
 
+    console.log("changing text in action")
     return {
         ...presentation,
         slides: newSlides

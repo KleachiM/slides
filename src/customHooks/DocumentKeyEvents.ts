@@ -20,13 +20,13 @@ export function useDocumentKeyHandler(){
                         setActiveSlide(slides[activeSlideIndex - 1].id);
                     }
                 }
-                if (event.key === "Backspace")
-                {
-                    if (selection.type === 'element')
-                        deleteElement()
-                    else
-                        deleteSlide()
-                }
+                // if (event.key === "Backspace")
+                // {
+                //     if (selection.type === 'element')
+                //         deleteElement()
+                //     else
+                //         deleteSlide()
+                // }
         }
 
         document.addEventListener('keydown', onKeyDownHandler);

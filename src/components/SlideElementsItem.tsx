@@ -1,6 +1,7 @@
-import React, {Dispatch, SetStateAction, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {Dimension, Point, SlideElement} from "../types/presentationTypes";
 import {useDragAndDropElements} from "../customHooks/DNDElements";
+import {useAppActions, useAppSelector} from "../store/store";
 
 type SlideElementProps = {
     slideElement: SlideElement,
@@ -12,9 +13,20 @@ type SlideElementProps = {
 }
 
 export function SlideElementsItem(props: SlideElementProps){
+    const {changeTextProperty} = useAppActions();
     const ref = useRef<HTMLTextAreaElement & HTMLImageElement>(null);
     const elemId = props.slideElement.id;
     useDragAndDropElements({ref, setDelta: props.setDelta, elemId});
+
+    const currentSelection = useAppSelector(state => state.presentation.presentation.selection);
+
+    const [textValue, setText] = useState('');
+    useEffect(() => {
+        if (!isReadOnly){
+            console.log(`changing selection val: ${textValue}`)
+            changeTextProperty('content', textValue);
+        }
+    }, [currentSelection]);
 
     const scale = props.scale;
     const isReadOnly = props.scale < 1;
@@ -29,12 +41,21 @@ export function SlideElementsItem(props: SlideElementProps){
                     ref.current?.focus();
                 }
             }}
+            onChange={(event) => {
+                if (!isReadOnly)
+                    console.log('setting txt on change')
+                    setText(event.target.value);
+            }}
             onBlur={(event) => {
                 if (!isReadOnly) {
-                    // store.dispatch(presentationActions.setText(event.target.value));
+                    changeTextProperty('content', event.target.value);
                 }
             }}
+
             style={{
+                border: 'unset',
+                outline: 'unset',
+                backgroundColor: "transparent",
                 top: props.slideElement.point.y * scale,
                 left: props.slideElement.point.x * scale,
                 width: props.slideElement.dimension.width * scale,
@@ -43,7 +64,8 @@ export function SlideElementsItem(props: SlideElementProps){
                 fontFamily: props.slideElement.fontFamily,
                 fontSize: props.slideElement.fontSize * scale,
                 fontStyle: props.slideElement.fontStyle,
-                fontWeight: props.slideElement.fontWeight
+                fontWeight: props.slideElement.fontWeight,
+                color: props.slideElement.fontColor
             }}
             defaultValue={props.slideElement.content}
             />

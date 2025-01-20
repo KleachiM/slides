@@ -23,7 +23,7 @@ export default function Editor(props: EditorProps) {
         addSlide, deleteSlide, addImage, addText, changeTextProperty,
         changeFontSize, changeItalic, changeUnderline, changeBold,
         undo, redo, fromJson, setBackgroundColor, setBackgroundImage,
-        setFullScreen
+        setFullScreen, deleteElement
     } = useAppActions();
 
     const minRefs = props.minRefs;
@@ -113,7 +113,12 @@ export default function Editor(props: EditorProps) {
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Add slide"
                   onClick={() => addSlide()}>add</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Delete slide"
-                  onClick={() => deleteSlide()}>delete</span>
+                  onClick={() =>{
+                          if (selection.type === 'element')
+                              deleteElement()
+                          else
+                              deleteSlide()
+                      }}>delete</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Undo"
                   onClick={() => undo()}>undo</span>
             <span className={`material-symbols-outlined ${styles.clickButton}`} title="Redo"
@@ -182,10 +187,10 @@ export default function Editor(props: EditorProps) {
                 style={{display: 'none'}}
             />
             <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => navigate("/player")} title="Preview">preview</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`}
-                  title="Up to front">move_selection_down</span>
-            <span className={`material-symbols-outlined ${styles.clickButton}`}
-                  title="Push down">move_selection_up</span>
+            {/*<span className={`material-symbols-outlined ${styles.clickButton}`}*/}
+            {/*      title="Up to front">move_selection_down</span>*/}
+            {/*<span className={`material-symbols-outlined ${styles.clickButton}`}*/}
+            {/*      title="Push down">move_selection_up</span>*/}
             <label htmlFor="select_color">
                 <div className={styles.buttonsPanel}>
                     <span className={`material-symbols-outlined ${styles.clickButton}`}
@@ -197,7 +202,10 @@ export default function Editor(props: EditorProps) {
                 id="select_color"
                 onChange={async (ev) => {
                     const res = ev.target.value
-                    setBackgroundColor(res)
+                    if (!isTextElementsSelected)
+                        setBackgroundColor(res)
+                    else
+                        changeTextProperty('fontColor', res);
                 }}
                 style={{display: 'none'}}
             />
