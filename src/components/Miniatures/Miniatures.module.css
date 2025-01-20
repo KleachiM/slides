@@ -5,6 +5,9 @@
     overflow-x: hidden;
     overflow-y: auto;
     margin: 0px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .miniature {
@@ -13,6 +16,9 @@
     border: groove;
     position: relative;
     min-height: 20%;
+    overflow: hidden;
+    width: 20vw;
+    height: 20vh;
 }
 
 .miniature:hover {

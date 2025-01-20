@@ -159,9 +159,9 @@ export default function Editor(props: EditorProps) {
                     <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => {
                         changeBold();
                     }}>format_bold</span>
-                    <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => {
-                        changeUnderline();
-                    }}>format_underlined</span>
+                    {/*<span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => {*/}
+                    {/*    changeUnderline();*/}
+                    {/*}}>format_underlined</span>*/}
                 </div>
             )}
             <span className={`material-symbols-outlined ${styles.clickButton}`} onClick={() => saveToPdf()}

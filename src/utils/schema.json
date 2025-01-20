@@ -133,6 +133,12 @@
                         "fontSize": {
                             "type": "number"
                         },
+                        "fontWeight" : {
+                            "type": "string"
+                        },
+                        "fontStyle" : {
+                            "type": "string"
+                        },
                         "type": {
                             "const": "text",
                             "type": "string"
@@ -143,6 +149,8 @@
                         "fontColor",
                         "fontFamily",
                         "fontSize",
+                        "fontWeight",
+                        "fontStyle",
                         "type"
                     ],
                     "type": "object"

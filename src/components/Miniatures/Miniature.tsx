@@ -51,10 +51,17 @@ export default function Miniature(props: MiniatureProps){
 
     let style = {
         backgroundColor: '',
-        backgroundImage: ''
+        backgroundImage: '',
+        backgroundSize: '',
+        backgroundPosition: '',
+        backgroundRepeat: ''
     }
-    if (backGroundTypeIsImage(props.slide.background))
+    if (backGroundTypeIsImage(props.slide.background)){
         style.backgroundImage = `url(${(props.slide.background as Image).source})`;
+        style.backgroundSize = '100% 100%';
+        style.backgroundPosition = 'center';
+        style.backgroundRepeat = 'no-repeat';
+    }
     else
         style.backgroundColor = `${props.slide.background}`
 

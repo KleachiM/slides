@@ -41,7 +41,7 @@ export function SlideElementsItem(props: SlideElementProps){
                 height: props.slideElement.dimension.height * scale,
                 position: "absolute",
                 fontFamily: props.slideElement.fontFamily,
-                fontSize: props.slideElement.fontSize,
+                fontSize: props.slideElement.fontSize * scale,
                 fontStyle: props.slideElement.fontStyle,
                 fontWeight: props.slideElement.fontWeight
             }}

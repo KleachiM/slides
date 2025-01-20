@@ -76,13 +76,13 @@ export default function ActiveSlide(){
     let style = {
         backgroundColor: '',
         backgroundImage: '',
-        // backgroundSize: '',
+        backgroundSize: '',
         backgroundPosition: '',
         backgroundRepeat: ''
     }
     if (backGroundTypeIsImage(slide.background)) {
         style.backgroundImage = `url(${(slide.background as Image).source})`;
-        // style.backgroundSize = 'cover';
+        style.backgroundSize = '100% 100%';
         style.backgroundPosition = 'center';
         style.backgroundRepeat = 'no-repeat';
     }

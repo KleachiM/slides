@@ -30,7 +30,9 @@ export const initialPresentation: Presentation = {
                     content: 'Content in slide 1',
                     fontSize: 10,
                     fontColor: 'black',
-                    fontFamily: 'serif'
+                    fontFamily: 'serif',
+                    fontWeight: "normal",
+                    fontStyle: 'normal',
                 },
                 {
                     type: 'text',
@@ -42,7 +44,9 @@ export const initialPresentation: Presentation = {
                     content: 'Content in slide 1',
                     fontSize: 10,
                     fontColor: 'black',
-                    fontFamily: 'Roboto'
+                    fontFamily: 'Roboto',
+                    fontWeight: "normal",
+                    fontStyle: 'normal',
                 },
             ]
         },
@@ -60,7 +64,9 @@ export const initialPresentation: Presentation = {
                     content: 'Content in slide 2',
                     fontSize: 10,
                     fontColor: 'black',
-                    fontFamily: 'serif'
+                    fontFamily: 'serif',
+                    fontWeight: "normal",
+                    fontStyle: 'normal',
                 }
             ]
         },
@@ -78,7 +84,9 @@ export const initialPresentation: Presentation = {
                     content: 'Content in slide 3',
                     fontSize: 10,
                     fontColor: 'black',
-                    fontFamily: 'serif'
+                    fontFamily: 'serif',
+                    fontWeight: "normal",
+                    fontStyle: 'normal',
                 }
             ]
         },
@@ -243,8 +251,18 @@ function presentationReducer(state = initialState, action){
                 undoStack: [...undoStack, presentation],
                 redoStack: []
             }
+        case ActionType.CHANGE_ITALIC:
+            return {
+                presentation: actions.changeTextItalic(presentation),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         case ActionType.CHANGE_BOLD:
-
+            return {
+                presentation: actions.changeTextBold(presentation),
+                undoStack: [...undoStack, presentation],
+                redoStack: []
+            }
         default:
             return state;
     }

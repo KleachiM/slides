@@ -32,7 +32,9 @@ const defaultTextBlock: TextBlock = {
     content: '',
     fontSize: 10,
     fontColor: 'black',
-    fontFamily: 'serif'
+    fontFamily: 'serif',
+    fontWeight: "normal",
+    fontStyle: 'normal',
 }
 
 function getDefaultTextBlock(): TextBlock{
@@ -47,20 +49,11 @@ function getDefaultTextBlock(): TextBlock{
         content: '',
         fontSize: 10,
         fontColor: 'black',
-        fontFamily: 'serif'
+        fontFamily: 'serif',
+        fontWeight: "normal",
+        fontStyle: 'normal',
     }
 }
-
-// const defaultImageBlock: ImageBlock = {
-//     type: 'image',
-//     id: defaultBlock.id,
-//     point: {x: defaultBlock.point.x, y: defaultBlock.point.y},
-//     dimension: {
-//         width: defaultBlock.dimension.width,
-//         height: defaultBlock.dimension.height
-//     },
-//     source: ''
-// }
 
 function getDefaultImageBlock(src: string): ImageBlock{
     return {
@@ -74,12 +67,6 @@ function getDefaultImageBlock(src: string): ImageBlock{
         source: src
     }
 }
-
-// const defaultSlide: Slide = {
-//     id: getRandomString(),
-//     background: 'white',
-//     slideData: []
-// }
 
 function getDefaultSlide(): Slide {
     return {
@@ -288,29 +275,55 @@ export function resizeElement(presentation: Presentation, offsetPoint: Point, of
     }
 }
 
-// export function changeTextItalic(presentation: Presentation){
-//     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
-//
-//     const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
-//         if (presentation.selection.value.includes(element.id)){
-//             if (element.type !== 'text')
-//                 return element;
-//             element.
-//         }
-//         return element;
-//     });
-//
-//     const newSlides = [...presentation.slides];
-//     newSlides[activeSlideIndex] = {
-//         ...newSlides[activeSlideIndex],
-//         slideData: newActiveSlideData,
-//     };
-//
-//     return {
-//         ...presentation,
-//         slides: newSlides
-//     }
-// }
+export function changeTextBold(presentation: Presentation){
+    const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
+
+    const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
+        if (presentation.selection.value.includes(element.id)){
+            if (element.type !== 'text')
+                return element;
+
+            element.fontWeight = element.fontWeight === 'bold' ? 'normal' : 'bold';
+        }
+        return element;
+    });
+
+    const newSlides = [...presentation.slides];
+    newSlides[activeSlideIndex] = {
+        ...newSlides[activeSlideIndex],
+        slideData: newActiveSlideData,
+    };
+
+    return {
+        ...presentation,
+        slides: newSlides
+    }
+}
+
+export function changeTextItalic(presentation: Presentation){
+    const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
+
+    const newActiveSlideData = presentation.slides[activeSlideIndex].slideData.map(element => {
+        if (presentation.selection.value.includes(element.id)){
+            if (element.type !== 'text')
+                return element;
+
+            element.fontStyle = element.fontStyle === 'italic' ? 'normal' : 'italic';
+        }
+        return element;
+    });
+
+    const newSlides = [...presentation.slides];
+    newSlides[activeSlideIndex] = {
+        ...newSlides[activeSlideIndex],
+        slideData: newActiveSlideData,
+    };
+
+    return {
+        ...presentation,
+        slides: newSlides
+    }
+}
 
 export function changeTextBlockProperty(presentation: Presentation, propName: string, propValue: string|number): Presentation{
     const activeSlideIndex = presentation.slides.findIndex(s => s.id === presentation.activeSlideId);
